@@ -9,6 +9,7 @@ import {
 import {
   Button,
   Card,
+  Form,
   Input,
   message,
   Modal,
@@ -19,7 +20,6 @@ import {
   Typography,
 } from 'antd'
 import { getSession } from 'next-auth/react'
-import type { ColumnsType, TableProps } from 'antd/es/table'
 import { useEffect, useRef, useState } from 'react'
 
 import type { InputRef } from 'antd'
@@ -46,6 +46,9 @@ const Affiliations = ({ user }: IProps) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [form] = Form.useForm()
 
   const init = () => {
     setLoading(true)
@@ -250,6 +253,30 @@ const Affiliations = ({ user }: IProps) => {
     },
   ]
 
+  const onFinish = (values: any) => {
+    setSubmitLoading(true)
+
+    Api.post(`partners`, user?.token, null, values)
+      .then((res: any) => {
+        message.success({
+          content: res.message,
+        })
+        setIsModalOpen(false)
+        init()
+      })
+      .catch((err) => {
+        message.error({ content: err.data.message })
+      })
+      .finally(() => {
+        setIsModalOpen(false)
+        form.setFieldValue('name', '')
+      })
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
+  }
+
   return (
     <>
       <Card>
@@ -257,6 +284,13 @@ const Affiliations = ({ user }: IProps) => {
           <Typography.Title level={3} className={`m-0`}>
             Partners
           </Typography.Title>
+          <Button
+            size="small"
+            icon={<PlusOutlined />}
+            onClick={() => setIsModalOpen(true)}
+          >
+            Add Partner
+          </Button>
         </Space>
 
         <Table
@@ -266,6 +300,37 @@ const Affiliations = ({ user }: IProps) => {
           loading={loading}
         />
       </Card>
+
+      <Modal
+        title="Add New Partner"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={false}
+      >
+        <Form
+          form={form}
+          name="basic"
+          style={{ marginTop: 25 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          layout="vertical"
+        >
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[{ required: true, message: 'Please input your name!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={submitLoading}>
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
 
       {contextHolder}
     </>
