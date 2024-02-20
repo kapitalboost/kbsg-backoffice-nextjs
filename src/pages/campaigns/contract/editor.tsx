@@ -2,6 +2,8 @@ import { dynamicMenu } from '@/utils/dynamicData'
 import { Editor } from '@tinymce/tinymce-react'
 import { useEffect, useState } from 'react'
 
+const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
+
 interface MainProps {
   content: string
   onChangeContent: any
@@ -27,6 +29,7 @@ const ContractEditorForm = ({ content, onChangeContent }: MainProps) => {
 
       <div style={{ visibility: `${loading ? 'hidden' : 'visible'}` }}>
         <Editor
+          apiKey={tiny_api_key}
           // onChange={(e, d) => console.log('changed : ', d)}
           value={content}
           onInit={(e, editor) => {

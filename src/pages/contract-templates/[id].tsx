@@ -173,6 +173,7 @@ const ContractTemplateEdit = ({ user }: IProps) => {
                         sign_content: val,
                       })
                     }
+                    contractTemplate={contractTemplate}
                   />
                 ),
               },

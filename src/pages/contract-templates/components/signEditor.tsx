@@ -5,16 +5,20 @@ import { useEffect, useState } from 'react'
 import SignaturePosition from '../components/signaturePosition'
 import { EditTwoTone, FormOutlined } from '@ant-design/icons'
 
+const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
+
 interface MainProps {
   user: any
   content: string
   onChangeContent: any
+  contractTemplate: any
 }
 
 const ContractEditorSignForm = ({
   user,
   content,
   onChangeContent,
+  contractTemplate,
 }: MainProps) => {
   const [loading, setLoading] = useState(true)
   const [signPositionPupup, setSignPositionPopup] = useState(false)
@@ -47,6 +51,7 @@ const ContractEditorSignForm = ({
         </div>
 
         <Editor
+          apiKey={tiny_api_key}
           // onChange={(e, d) => console.log('changed : ', d)}
           value={content}
           onInit={(e, editor) => {
@@ -99,9 +104,11 @@ const ContractEditorSignForm = ({
 
       <SignaturePosition
         user={user}
+        contractTemplate={contractTemplate}
         handleCancel={() => setSignPositionPopup(false)}
         isModalOpen={signPositionPupup}
         signatureContent={content}
+        signerJson={null}
       />
     </>
   )

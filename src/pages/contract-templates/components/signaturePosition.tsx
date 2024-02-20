@@ -7,17 +7,22 @@ import {
 import {
   Button,
   Card,
+  Col,
   List,
   Modal,
   Pagination,
+  Row,
   Space,
   Switch,
   Tooltip,
   Typography,
   notification,
 } from 'antd'
-import { useEffect, useRef, useState } from 'react'
+import { createRef, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import useMousePosition from './useMousePosition'
+import { signersInitial } from '@/utils/signers'
+import { drawSign } from './drawSign'
+import { ObjectType } from 'typescript'
 
 /**
  * Position details
@@ -30,7 +35,9 @@ import useMousePosition from './useMousePosition'
 
 interface IProps {
   user: any
+  contractTemplate: any
   signatureContent: string
+  signerJson?: any
   isModalOpen: boolean
   handleCancel: any
   investmentId?: string
@@ -40,19 +47,35 @@ const URL_BE = process.env.NEXT_PUBLIC_BE_URL
 
 const SignaturePosition = ({
   user,
+  contractTemplate,
   signatureContent,
+  signerJson,
   isModalOpen,
   handleCancel,
   investmentId,
 }: IProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [paginateCanvas, setPaginateCanvas] = useState<any>(null)
   const [paperDetail, setPaperDetail] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
   const [inEdit, setInEdit] = useState(false)
   const [signPages, setSignPages] = useState<any>([])
   const [pageActive, setPageActive] = useState(0)
   const [coords, handleCoords] = useMousePosition(true)
-  const [signerActive, setSignerActive] = useState<any>(null)
+  const [signerActive, setSignerActive] = useState('investor')
+  const [signerPositions, setSignerPositions] = useState<any>(null)
+  const signerColor = {
+    investor: 'rgba(22, 160, 133,1.0)',
+    kb_director: 'rgba(52, 152, 219,1.0)',
+    ukm_director: 'rgba(127, 140, 141,1.0)',
+    ukm_commissioner: 'rgba(189, 195, 199,1.0)',
+  }
+
+  const signSize = {
+    width: 240,
+    height: 100,
+  }
 
   const init = () => {
     setLoading(true)
@@ -75,11 +98,6 @@ const SignaturePosition = ({
           images.push(`${res?.url}/${index}.png`)
         }
         setSignPages(images)
-
-        // if (canvasRef.current) {
-        //   const ctx = canvasRef.current.getContext('2d')
-        //   ctx?.strokeRect(200, 200, 40, 50)
-        // }
       })
       .catch((err) => {
         notification.error(err.data.message)
@@ -95,15 +113,124 @@ const SignaturePosition = ({
 
   useEffect(() => {
     if (isModalOpen) {
+      const signer_json = JSON.parse(contractTemplate.signer_json)
+      if (signer_json !== null) {
+        let signObject: any = {}
+
+        for (let index = 0; index < signer_json.length; index++) {
+          const element = signer_json[index]
+
+          signObject[element.type] = element
+        }
+        setSignerPositions(signObject)
+
+        drawSignerPosition(0, signObject)
+      } else {
+        setSignerPositions(signersInitial)
+      }
       init()
     } else {
       resetPopup()
     }
   }, [isModalOpen])
 
+  const drawSignerPosition = (page: number, sign_object: any) => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+
+      if (ctx) {
+        if (sign_object) {
+          for (const property in sign_object) {
+            console.log(property, sign_object[property])
+            const element = sign_object[property]
+
+            if (element.page === page) {
+              if (element.startX !== 0) {
+                ctx.strokeStyle = element.color
+                ctx.fillStyle = element.color
+                ctx?.strokeRect(
+                  element.startX,
+                  element.startY,
+                  signSize.width,
+                  signSize.height
+                )
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`)
     setInEdit(checked)
+  }
+
+  const onRemoveSignerPosition = (key: string) => {
+    let assignSignerPositions = signerPositions[key]
+
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+      ctx?.clearRect(
+        assignSignerPositions.startX - 5,
+        assignSignerPositions.startY - 5,
+        assignSignerPositions.width + 15,
+        assignSignerPositions.height + 15
+      )
+
+      assignSignerPositions = {
+        ...assignSignerPositions,
+        page: null,
+        startX: 0,
+        startY: 0,
+        width: 0,
+        height: 0,
+      }
+
+      const result = {
+        ...signerPositions,
+        [key]: assignSignerPositions,
+      }
+
+      setSignerPositions(result)
+    }
+  }
+
+  const onPageChange = (page_number: number) => {
+    setPageActive(page_number)
+
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d')
+      ctx?.clearRect(0, 0, 933, 1324)
+
+      drawSignerPosition(page_number, signerPositions)
+    }
+  }
+
+  const onSave = () => {
+    setSubmitLoading(true)
+    const keys = ['investor', 'kb_director', 'ukm_director', 'ukm_commissioner']
+    let params: any = []
+
+    keys.forEach((signer: any) => {
+      params.push(signerPositions[signer])
+    })
+
+    Api.post(
+      `contract-templates/sign-position/${contractTemplate?.id}`,
+      user.token,
+      user.id,
+      {
+        sign_json: params,
+      }
+    )
+      .then((res: any) => {
+        notification.success({ message: res.message })
+      })
+      .catch((err: any) => {
+        notification.error({ message: err.message })
+      })
+      .finally(() => setSubmitLoading(false))
   }
 
   return (
@@ -111,10 +238,12 @@ const SignaturePosition = ({
       <Modal
         title="Signature Position"
         open={isModalOpen}
-        footer={false}
+        // footer={false}
+        okText={<Button loading={submitLoading}>Save Position</Button>}
         onCancel={handleCancel}
-        width={1250}
-        style={{ top: 20, paddingTop: 30 }}
+        onOk={() => onSave()}
+        width={1366}
+        style={{ top: 20 }}
       >
         {loading && (
           <div className="text-center my-5">
@@ -164,13 +293,20 @@ const SignaturePosition = ({
                             >
                               set
                             </a>,
-                            <a key="list-loadmore-more">remove</a>,
+                            <a
+                              key="list-loadmore-more"
+                              onClick={() => onRemoveSignerPosition('investor')}
+                            >
+                              remove
+                            </a>,
                           ]
                         : []
                     }
                   >
                     <Space>
-                      <SelectOutlined style={{ color: 'orange' }} />
+                      <SelectOutlined
+                        style={{ color: signerColor['investor'] }}
+                      />
                       <span>INVESTOR</span>
                     </Space>
                   </List.Item>
@@ -187,13 +323,22 @@ const SignaturePosition = ({
                             >
                               set
                             </a>,
-                            <a key="list-loadmore-more">remove</a>,
+                            <a
+                              key="list-loadmore-more"
+                              onClick={() =>
+                                onRemoveSignerPosition('ukm_director')
+                              }
+                            >
+                              remove
+                            </a>,
                           ]
                         : []
                     }
                   >
                     <Space>
-                      <SelectOutlined style={{ color: 'green' }} />
+                      <SelectOutlined
+                        style={{ color: signerColor['ukm_director'] }}
+                      />
                       <span>[UKM] Director</span>
                     </Space>
                   </List.Item>
@@ -212,13 +357,22 @@ const SignaturePosition = ({
                             >
                               set
                             </a>,
-                            <a key="list-loadmore-more">remove</a>,
+                            <a
+                              key="list-loadmore-more"
+                              onClick={() =>
+                                onRemoveSignerPosition('ukm_commissioner')
+                              }
+                            >
+                              remove
+                            </a>,
                           ]
                         : []
                     }
                   >
                     <Space>
-                      <SelectOutlined style={{ color: 'chartreuse' }} />
+                      <SelectOutlined
+                        style={{ color: signerColor['ukm_commissioner'] }}
+                      />
                       <span>[UKM] Commissioner</span>
                     </Space>
                   </List.Item>
@@ -235,19 +389,73 @@ const SignaturePosition = ({
                             >
                               set
                             </a>,
-                            <a key="list-loadmore-more">remove</a>,
+                            <a
+                              key="list-loadmore-more"
+                              onClick={() =>
+                                onRemoveSignerPosition('kb_director')
+                              }
+                            >
+                              remove
+                            </a>,
                           ]
                         : []
                     }
                   >
                     <Space>
-                      <SelectOutlined style={{ color: 'blue' }} />
+                      <SelectOutlined
+                        style={{ color: signerColor['kb_director'] }}
+                      />
                       <span>[KB] Director</span>
                     </Space>
                   </List.Item>
                 </List>
               </Card>
-              <button
+
+              <div>
+                <Typography.Title level={5}>Pages</Typography.Title>
+
+                <Row
+                  gutter={10}
+                  style={{ width: '330px', borderColor: '#d9d9d9' }}
+                >
+                  {signPages.map((page: any, i: number) => (
+                    <Col span={8}>
+                      <Card
+                        key={i}
+                        className="mb-1"
+                        bodyStyle={{
+                          padding: 0,
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <a onClick={() => onPageChange(i)}>
+                          <img
+                            src={page}
+                            alt={`Signature Page`}
+                            width={'100%'}
+                          />
+                          <span
+                            style={{
+                              position: 'absolute',
+                              bottom: 0,
+                              left: 0,
+                              width: '100%',
+                              backgroundColor:
+                                pageActive === i
+                                  ? '#3498db'
+                                  : 'rgba(0,0,0,0.2)',
+                              color: 'white',
+                              textAlign: 'center',
+                            }}
+                          >{`Page ${i + 1}`}</span>
+                        </a>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+              {/* <button
                 onClick={() => {
                   if (canvasRef.current) {
                     const ctx = canvasRef.current.getContext('2d')
@@ -256,25 +464,68 @@ const SignaturePosition = ({
                 }}
               >
                 CLEAR
-              </button>
+              </button> */}
             </div>
             <div className="signature-area">
               <canvas
                 ref={canvasRef}
-                width="669"
-                height="950"
+                width="871"
+                height="1235"
                 className="signature-canvas"
                 onClick={(e) => {
-                  if (inEdit) {
-                    handleCoords(e as unknown as MouseEvent)
-                    if (canvasRef.current) {
-                      const ctx = canvasRef.current.getContext('2d')
-                      // clear current stroke
-                      ctx?.clearRect(0, 0, 669, 950)
+                  let assignSignerPositions = signerPositions[signerActive]
 
-                      if (ctx) {
-                        ctx.strokeStyle = 'purple'
-                        ctx?.strokeRect(coords.x, coords.y, 200, 80)
+                  if (inEdit) {
+                    if (canvasRef.current) {
+                      const ctx = canvasRef?.current.getContext('2d')
+
+                      // clear old position
+                      if (assignSignerPositions.startX !== 0) {
+                        ctx?.clearRect(
+                          assignSignerPositions.startX - 5,
+                          assignSignerPositions.startY - 5,
+                          assignSignerPositions.width + 15,
+                          assignSignerPositions.height + 15
+                        )
+                      }
+
+                      // set new position
+                      handleCoords(e as unknown as MouseEvent)
+                      if (ctx && signerActive !== '') {
+                        // set color stroke
+                        ctx.fillStyle =
+                          signerColor[signerActive as keyof typeof signerColor]
+
+                        ctx.strokeStyle =
+                          signerColor[signerActive as keyof typeof signerColor]
+
+                        ctx?.strokeRect(
+                          coords.x,
+                          coords.y,
+                          signSize.width,
+                          signSize.height
+                        )
+
+                        // set position and page
+                        assignSignerPositions = {
+                          ...assignSignerPositions,
+                          page: pageActive,
+                          startX: coords.x,
+                          startY: coords.y,
+                          width: signSize.width,
+                          height: signSize.height,
+                          color:
+                            signerColor[
+                              signerActive as keyof typeof signerColor
+                            ],
+                        }
+
+                        const result = {
+                          ...signerPositions,
+                          [signerActive]: assignSignerPositions,
+                        }
+
+                        setSignerPositions(result)
                       }
                     }
                   }
@@ -285,35 +536,6 @@ const SignaturePosition = ({
                 alt="Signature Area"
                 className="signature-image"
               />
-            </div>
-            <div>
-              {signPages.map((page: any, i: number) => (
-                <Card
-                  key={i}
-                  className="mb-1"
-                  bodyStyle={{
-                    padding: 0,
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <a onClick={() => setPageActive(i)}>
-                    <img src={page} alt={`Signature Page`} width={'100%'} />
-                    <span
-                      style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        width: '100%',
-                        backgroundColor:
-                          pageActive === i ? '#3498db' : 'rgba(0,0,0,0.2)',
-                        color: 'white',
-                        textAlign: 'center',
-                      }}
-                    >{`Page ${i + 1}`}</span>
-                  </a>
-                </Card>
-              ))}
             </div>
           </Space>
         </div>
