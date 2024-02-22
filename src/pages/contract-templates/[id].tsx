@@ -33,6 +33,7 @@ import ContractAttachmentEditorForm from './components/attachmentEditor'
 import DetailContract from './components/DetailContract'
 import ContractEditorForm from './components/mainEditor'
 import ContractEditorSignForm from './components/signEditor'
+import Link from 'next/link'
 
 interface IProps {
   user: any
@@ -123,7 +124,10 @@ const ContractTemplateEdit = ({ user }: IProps) => {
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
         <Breadcrumb.Item>Contact templates</Breadcrumb.Item>
-        <Breadcrumb.Item>List</Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link href={`/contract-templates`}>List</Link>
+        </Breadcrumb.Item>
+
         <Breadcrumb.Item>Edit Contract Template</Breadcrumb.Item>
       </Breadcrumb>
 
