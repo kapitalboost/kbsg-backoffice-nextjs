@@ -239,7 +239,10 @@ const SignaturePosition = ({
         title="Signature Position"
         open={isModalOpen}
         // footer={false}
-        okText={<Button loading={submitLoading}>Save Position</Button>}
+        okText={`Save Position`}
+        okButtonProps={{
+          loading: submitLoading,
+        }}
         onCancel={handleCancel}
         onOk={() => onSave()}
         width={1366}
