@@ -1,16 +1,10 @@
 import { Api } from '@/api/api'
+import { LoadingOutlined, SelectOutlined } from '@ant-design/icons'
 import {
-  LoadingOutlined,
-  SelectOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
-import {
-  Button,
   Card,
   Col,
   List,
   Modal,
-  Pagination,
   Row,
   Space,
   Switch,
@@ -18,11 +12,9 @@ import {
   Typography,
   notification,
 } from 'antd'
-import { createRef, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useMousePosition from './useMousePosition'
 import { signersInitial } from '@/utils/signers'
-import { drawSign } from './drawSign'
-import { ObjectType } from 'typescript'
 
 /**
  * Position details
