@@ -422,7 +422,7 @@ const SignaturePosition = ({
                   style={{ width: '330px', borderColor: '#d9d9d9' }}
                 >
                   {signPages.map((page: any, i: number) => (
-                    <Col span={8}>
+                    <Col span={8} key={i}>
                       <Card
                         key={i}
                         className="mb-1"

@@ -169,6 +169,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
                 <img
                   src={investment?.bank_proof}
                   style={{ maxHeight: '450px', maxWidth: '100%' }}
+                  alt="investment-bank-proof"
                 />
               </Link>
             </div>
@@ -176,6 +177,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
             <img
               src="https://dummyimage.com/600x400/8c8c8c/fff&text=File+not+found"
               width={`100%`}
+              alt="investment-bank-proof-dummy"
             />
           )}
         </Col>
