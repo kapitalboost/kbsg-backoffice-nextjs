@@ -31,6 +31,7 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 
 const { Text, Link } = Typography
+const BE_URL = process.env.NEXT_PUBLIC_BE_URL
 
 interface Iprops {
   user: any
@@ -108,10 +109,14 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
     setIsModalOpen(true)
     setOpenLogLoading(true)
 
-    Api.get(`eversign/document/${data?.document_hash}`, user?.token)
+    Api.adminV1Get(
+      `${BE_URL}/api/admin/esign/documents/${data?.document_hash}`,
+      user?.token,
+      user?.id
+    )
       .then((res: any) => {
-        console.log(res)
-        setContractLog(res)
+        console.log('RESPONSE > ', res.data)
+        setContractLog(res.data)
       })
       .catch((err) => {
         console.log(err)
@@ -120,6 +125,8 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
   }
 
   const selectContract = (v: any) => {
+    console.log(v)
+
     setContractSelected(v)
   }
 
@@ -288,7 +295,7 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
       />
 
       <Modal
-        title={contractLog ? contractLog.title : 'Eversign Document Log'}
+        title={contractLog ? contractLog.filename : 'Sign Document Log'}
         open={isModalOpen}
         onCancel={() => {
           setContractLog(null)
@@ -310,8 +317,28 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
               </div>
             ) : (
               <>
-                <h4 className="m-0">Signer</h4>
-                <ol className="mt-0 mb-2">
+                <h4>Signer</h4>
+                <ol>
+                  {contractLog.signers.map((value: any, index: number) => {
+                    return (
+                      <li key={index}>
+                        {value.email}{' '}
+                        {value.status === 'completed' ? (
+                          <strong style={{ color: 'green' }}>
+                            {' '}
+                            [{value.status}]{' '}
+                          </strong>
+                        ) : (
+                          <strong style={{ color: 'orange' }}>
+                            {' '}
+                            [on process]{' '}
+                          </strong>
+                        )}
+                      </li>
+                    )
+                  })}
+                </ol>
+                {/* <ol className="mt-0 mb-2">
                   {contractLog.signers.map((signer: any, idx: number) => (
                     <li key={idx}>
                       {signer.name}{' '}
@@ -320,9 +347,9 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
                       </Text>
                     </li>
                   ))}
-                </ol>
-                <h4>Logs</h4>
-                <Timeline items={createTimeline(contractLog)} />
+                </ol> */}
+                {/* <h4>Logs</h4>
+                <Timeline items={createTimeline(contractLog)} /> */}
               </>
             )}
           </>

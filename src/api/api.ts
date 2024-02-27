@@ -108,4 +108,39 @@ export const Api = {
         })
     })
   },
+  adminV1Get: async (path: string, token: any, id?: any) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: token ? `Bearer ${token}` : token,
+        id: id ? id : null,
+      },
+    }
+
+    return await new Promise((resolve, reject) => {
+      axios
+        .get(path, config)
+        .then((result: any) => {
+          return resolve(result.data)
+        })
+        .catch((error: any) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              message.error({ content: 'user unauthorized to access.' })
+
+              setTimeout(() => {
+                signOut({
+                  callbackUrl: '/login',
+                })
+              }, 1000)
+            }
+
+            reject(error.response)
+          } else {
+            reject('ERR_NETWORK')
+          }
+        })
+    })
+  },
 }
