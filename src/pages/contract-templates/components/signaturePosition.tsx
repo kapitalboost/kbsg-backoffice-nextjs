@@ -13,7 +13,7 @@ import {
   notification,
 } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import useMousePosition from './useMousePosition'
+import useMousePosition from '../../../components/useMousePosition'
 import { signersInitial } from '@/utils/signers'
 
 /**
