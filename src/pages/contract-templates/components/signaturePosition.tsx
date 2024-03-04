@@ -107,12 +107,18 @@ const SignaturePosition = ({
     if (isModalOpen) {
       const signer_json = JSON.parse(contractTemplate.signer_json)
       if (signer_json !== null) {
+        const keys = [
+          'investor',
+          'kb_director',
+          'ukm_director',
+          'ukm_commissioner',
+        ]
         let signObject: any = {}
 
         for (let index = 0; index < signer_json.length; index++) {
           const element = signer_json[index]
 
-          signObject[element.type] = element
+          signObject[keys[index]] = element
         }
         setSignerPositions(signObject)
 
@@ -133,19 +139,20 @@ const SignaturePosition = ({
       if (ctx) {
         if (sign_object) {
           for (const property in sign_object) {
-            console.log(property, sign_object[property])
             const element = sign_object[property]
 
-            if (element.page === page) {
-              if (element.startX !== 0) {
-                ctx.strokeStyle = element.color
-                ctx.fillStyle = element.color
-                ctx?.strokeRect(
-                  element.startX,
-                  element.startY,
-                  signSize.width,
-                  signSize.height
-                )
+            if (element) {
+              if (element.page === page) {
+                if (element.startX !== 0) {
+                  ctx.strokeStyle = element.color
+                  ctx.fillStyle = element.color
+                  ctx?.strokeRect(
+                    element.startX,
+                    element.startY,
+                    signSize.width,
+                    signSize.height
+                  )
+                }
               }
             }
           }
@@ -469,19 +476,22 @@ const SignaturePosition = ({
                 className="signature-canvas"
                 onClick={(e) => {
                   let assignSignerPositions = signerPositions[signerActive]
+                  console.log(assignSignerPositions)
 
                   if (inEdit) {
                     if (canvasRef.current) {
                       const ctx = canvasRef?.current.getContext('2d')
 
                       // clear old position
-                      if (assignSignerPositions.startX !== 0) {
-                        ctx?.clearRect(
-                          assignSignerPositions.startX - 5,
-                          assignSignerPositions.startY - 5,
-                          assignSignerPositions.width + 15,
-                          assignSignerPositions.height + 15
-                        )
+                      if (assignSignerPositions) {
+                        if (assignSignerPositions.startX !== 0) {
+                          ctx?.clearRect(
+                            assignSignerPositions.startX - 5,
+                            assignSignerPositions.startY - 5,
+                            assignSignerPositions.width + 15,
+                            assignSignerPositions.height + 15
+                          )
+                        }
                       }
 
                       // set new position
