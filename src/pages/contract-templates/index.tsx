@@ -100,6 +100,17 @@ const ContractTemplates = ({ user }: IProps) => {
       title: 'Type',
       dataIndex: 'type',
       key: 'type',
+      render: (type: string) => (
+        <>
+          {type == 'all'
+            ? 'All'
+            : type == 'murabaha'
+            ? 'Murabaha'
+            : type == 'invoice-financing'
+            ? 'Invoice Financing'
+            : '-'}
+        </>
+      ),
     },
     {
       title: 'Contract For',

@@ -53,6 +53,7 @@ dayjs.extend(timezone)
 dayjs.tz.setDefault('Asia/Singapore')
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
+const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
 
 const { Option } = Select
 
@@ -657,6 +658,7 @@ const NewCampaign = ({ user }: IProps) => {
                     {!loading && (
                       <Form.Item>
                         <Editor
+                          apiKey={tiny_api_key}
                           onInit={(evt, editor) => (editorRef.current = editor)}
                           ref={editorRef}
                           initialValue={description}
