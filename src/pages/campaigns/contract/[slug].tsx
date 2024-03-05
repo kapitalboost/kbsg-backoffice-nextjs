@@ -6,6 +6,7 @@ import {
   Divider,
   Dropdown,
   Form,
+  Grid,
   Input,
   Row,
   Space,
@@ -25,6 +26,8 @@ import UkmContract from './UkmContract'
 import Link from 'next/link'
 import type { MenuProps } from 'antd'
 
+const { useBreakpoint } = Grid
+
 interface IProps {
   user: any
 }
@@ -37,6 +40,7 @@ const CampaignContract = ({ user }: IProps) => {
   const [campaignContract, setCampaignContract] = useState<any>(null)
 
   const slug = router.query.slug
+  const screens = useBreakpoint()
 
   const initData = () => {
     setLoading(true)
@@ -102,12 +106,10 @@ const CampaignContract = ({ user }: IProps) => {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <h3 className="m-0">
-          Campaign Contract {campaign ? `- ${campaign.name}` : ''}
-        </h3>
-        <br />
-
+      <Card
+        title={<>Campaign Contract {campaign ? `- ${campaign.name}` : ''}</>}
+        bodyStyle={screens.xs || screens.sm ? { padding: '0' } : {}}
+      >
         {loading ? (
           <div className="text-center my-5">
             <LoadingOutlined style={{ fontSize: '2.5rem' }} />
@@ -116,8 +118,9 @@ const CampaignContract = ({ user }: IProps) => {
         ) : (
           <Tabs
             defaultActiveKey="1"
-            tabPosition="right"
+            tabPosition={screens.xl ? 'right' : 'top'}
             style={{ marginBottom: 32 }}
+            type={screens.xs ? 'card' : 'line'}
             items={[
               {
                 label: `Contract Form`,

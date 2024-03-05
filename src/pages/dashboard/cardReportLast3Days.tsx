@@ -1,7 +1,9 @@
 import { Api } from '@/api/api'
 import { LoadingOutlined } from '@ant-design/icons'
-import { Card, Typography } from 'antd'
+import { Card, Grid, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   token: string
@@ -10,6 +12,7 @@ interface IProps {
 }
 
 const CardReportLast3Days = ({ token, getData, title }: IProps) => {
+  const screens = useBreakpoint()
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
 
@@ -32,8 +35,11 @@ const CardReportLast3Days = ({ token, getData, title }: IProps) => {
   }, [])
 
   return (
-    <Card style={{ height: '165px' }}>
-      <Typography.Title level={4} className="m-0 mb-0-1">
+    <Card
+      bodyStyle={screens.xs ? { padding: '5px 10px' } : {}}
+      style={{ height: '165px' }}
+    >
+      <Typography.Title level={5} className="m-0 mb-0-1">
         {title}
       </Typography.Title>
 

@@ -13,6 +13,7 @@ import {
   Button,
   Col,
   Divider,
+  Grid,
   message,
   Modal,
   notification,
@@ -28,6 +29,7 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 
 const { Text, Link } = Typography
+const { useBreakpoint } = Grid
 
 interface iProps {
   user: any
@@ -43,6 +45,8 @@ const UkmContract = ({ user, slug }: iProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [contractLog, setContractLog] = useState<any>(null)
   const [openLogLoading, setOpenLogLoading] = useState(false)
+
+  const screens = useBreakpoint()
 
   const initContract = () => {
     setLoading(true)
@@ -165,6 +169,7 @@ const UkmContract = ({ user, slug }: iProps) => {
       title: 'Name',
       dataIndex: 'type',
       key: 'type',
+      fixed: screens.xs || screens.sm ? 'left' : false,
     },
     {
       title: 'Ready?',
@@ -290,7 +295,12 @@ const UkmContract = ({ user, slug }: iProps) => {
 
       <Row>
         <Col span={24}>
-          <Table dataSource={contracts} columns={columns} loading={loading} />
+          <Table
+            dataSource={contracts}
+            columns={columns}
+            loading={loading}
+            scroll={{ x: 800 }}
+          />
         </Col>
       </Row>
 

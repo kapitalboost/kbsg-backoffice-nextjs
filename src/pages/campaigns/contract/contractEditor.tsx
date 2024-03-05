@@ -4,6 +4,7 @@ import {
   BlockOutlined,
   CheckCircleOutlined,
   CheckOutlined,
+  CloseCircleOutlined,
   DotChartOutlined,
   DownloadOutlined,
   EyeFilled,
@@ -23,6 +24,7 @@ import {
   Col,
   Divider,
   Dropdown,
+  Grid,
   Input,
   List,
   message,
@@ -39,6 +41,7 @@ import { useEffect, useState } from 'react'
 import ListOfFileContracts from './components/listOfFileContracts'
 import ContractEditorForm from './editor'
 import type { SelectProps } from 'antd'
+const { useBreakpoint } = Grid
 
 interface IProps {
   user: any
@@ -79,6 +82,8 @@ const ContractEditor = ({ user, slug }: IProps) => {
   const [btnPasswordLoading, setBtnPasswordLoading] = useState(false)
   const [isPasswordFalse, setIsPasswordFalse] = useState(false)
   const [isPreviewAfterSave, setIsPreviewAfterSave] = useState(false)
+
+  const screens = useBreakpoint()
 
   const initContracts = () => {
     Api.get(`campaign/file-contract/${slug}`, user?.token).then((res: any) => {
@@ -389,104 +394,116 @@ const ContractEditor = ({ user, slug }: IProps) => {
 
   return (
     <>
-      {!loading && (
-        <>
-          <Divider orientation="left" dashed />
-          <Row>
-            <Col span={12}>
-              <Space size={15}>
-                <Button icon={<BlockOutlined />} onClick={showModal}>
-                  Change Template
-                </Button>
-                <Select
-                  showSearch
-                  allowClear
-                  value={contractType}
-                  placeholder="Select Type of Contract"
-                  style={{ width: 200 }}
-                  onChange={handleChangeType}
-                  filterOption={(input, option) =>
-                    (option?.label ?? '').includes(input)
-                  }
-                  options={contract_types}
-                />
-              </Space>
-            </Col>
-            <Col span={12}>
-              <Space className="space-end">
-                <Button
-                  type="primary"
-                  loading={saveLoading}
-                  disabled={savePreviewLoading || contractType === null}
-                  // onClick={() => onSave(false)}
-                  onClick={() => {
-                    setIsModalPassword(true)
-                    setIsPreviewAfterSave(false)
-                  }}
-                  icon={<CheckOutlined />}
-                >{`Save Contract`}</Button>
-
-                <Dropdown menu={{ items }} placement="bottomRight">
-                  <Tooltip title={`More menu`}>
-                    <Button icon={<MoreOutlined />}></Button>
-                  </Tooltip>
-                </Dropdown>
-              </Space>
-            </Col>
-          </Row>
-        </>
-      )}
-
-      {loading ? (
-        <div className="text-center my-5">
-          <LoadingOutlined style={{ fontSize: '2.5rem' }} />
-          <h3>Please Wait</h3>
+      {screens.xs || screens.sm ? (
+        <div className="text-center">
+          <CloseCircleOutlined
+            style={{ fontSize: '6rem', color: 'red', paddingTop: '35px' }}
+          />
+          <Typography.Title level={4}>
+            You cannot edit the contract on a mobile device
+          </Typography.Title>
         </div>
       ) : (
         <>
-          <Divider orientation="left" dashed />
-          <Tabs
-            defaultActiveKey="1"
-            style={{ marginBottom: 32 }}
-            items={[
-              {
-                label: `Main Content`,
-                key: 'main-content',
-                children: (
-                  <ContractEditorForm
-                    content={mainContent}
-                    onChangeContent={(content: string) =>
-                      setMainContent(content)
-                    }
-                  />
-                ),
-              },
-              {
-                label: `Sign Content`,
-                key: 'sign content',
-                children: (
-                  <ContractEditorForm
-                    content={signContent}
-                    onChangeContent={(content: string) =>
-                      setSignContent(content)
-                    }
-                  />
-                ),
-              },
-              {
-                label: `Attachment Content`,
-                key: 'attachment-content',
-                children: (
-                  <ContractEditorForm
-                    content={attachmentContent}
-                    onChangeContent={(content: string) =>
-                      setAttachmentContent(content)
-                    }
-                  />
-                ),
-              },
-            ]}
-          />
+          {!loading && (
+            <>
+              <Divider orientation="left" dashed />
+              <Row>
+                <Col span={12}>
+                  <Space size={15}>
+                    <Button icon={<BlockOutlined />} onClick={showModal}>
+                      Change Template
+                    </Button>
+                    <Select
+                      showSearch
+                      allowClear
+                      value={contractType}
+                      placeholder="Select Type of Contract"
+                      style={{ width: 200 }}
+                      onChange={handleChangeType}
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').includes(input)
+                      }
+                      options={contract_types}
+                    />
+                  </Space>
+                </Col>
+                <Col span={12}>
+                  <Space className="space-end">
+                    <Button
+                      type="primary"
+                      loading={saveLoading}
+                      disabled={savePreviewLoading || contractType === null}
+                      // onClick={() => onSave(false)}
+                      onClick={() => {
+                        setIsModalPassword(true)
+                        setIsPreviewAfterSave(false)
+                      }}
+                      icon={<CheckOutlined />}
+                    >{`Save Contract`}</Button>
+
+                    <Dropdown menu={{ items }} placement="bottomRight">
+                      <Tooltip title={`More menu`}>
+                        <Button icon={<MoreOutlined />}></Button>
+                      </Tooltip>
+                    </Dropdown>
+                  </Space>
+                </Col>
+              </Row>
+            </>
+          )}
+          {loading ? (
+            <div className="text-center my-5">
+              <LoadingOutlined style={{ fontSize: '2.5rem' }} />
+              <h3>Please Wait</h3>
+            </div>
+          ) : (
+            <>
+              <Divider orientation="left" dashed />
+              <Tabs
+                defaultActiveKey="1"
+                style={{ marginBottom: 32 }}
+                items={[
+                  {
+                    label: `Main Content`,
+                    key: 'main-content',
+                    children: (
+                      <ContractEditorForm
+                        content={mainContent}
+                        onChangeContent={(content: string) =>
+                          setMainContent(content)
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    label: `Sign Content`,
+                    key: 'sign content',
+                    children: (
+                      <ContractEditorForm
+                        content={signContent}
+                        onChangeContent={(content: string) =>
+                          setSignContent(content)
+                        }
+                      />
+                    ),
+                  },
+                  {
+                    label: `Attachment Content`,
+                    key: 'attachment-content',
+                    children: (
+                      <ContractEditorForm
+                        content={attachmentContent}
+                        onChangeContent={(content: string) =>
+                          setAttachmentContent(content)
+                        }
+                      />
+                    ),
+                  },
+                ]}
+              />
+            </>
+          )}
         </>
       )}
 

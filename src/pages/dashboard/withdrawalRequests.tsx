@@ -89,7 +89,9 @@ const WithdrawalRequests = ({ token, title }: IProps) => {
           {screens.xs ? (
             <Typography.Text strong>{title}</Typography.Text>
           ) : (
-            <Typography.Title level={5}>{title}</Typography.Title>
+            <Typography.Title level={5} className="m-0">
+              {title}
+            </Typography.Title>
           )}
           <Space wrap>
             <Button
@@ -106,7 +108,7 @@ const WithdrawalRequests = ({ token, title }: IProps) => {
             >
               3 days
             </Button>
-            {!screens.xs && (
+            {screens.lg && (
               <Button
                 size="small"
                 type={day === 7 ? 'primary' : 'default'}

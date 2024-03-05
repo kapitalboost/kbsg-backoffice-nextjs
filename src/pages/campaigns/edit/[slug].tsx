@@ -4,6 +4,7 @@ import {
   LoadingOutlined,
   PlusOutlined,
   ReloadOutlined,
+  SendOutlined,
   WarningOutlined,
 } from '@ant-design/icons'
 
@@ -26,6 +27,7 @@ import {
   Dropdown,
   Card,
   Typography,
+  Grid,
 } from 'antd'
 import CampaignGallery from '../components/galleries'
 import PdfCampaign from '../components/pdf'
@@ -54,6 +56,7 @@ dayjs.tz.setDefault('Asia/Singapore')
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
+const { useBreakpoint } = Grid
 
 const { Option } = Select
 
@@ -78,6 +81,7 @@ const NewCampaign = ({ user }: IProps) => {
   const [campaignOptions, setCampaignOptions] = useState([])
 
   const slug = router.query.slug
+  const screens = useBreakpoint()
 
   const loadCampaign = (slug: any) => {
     setCampaign(null)
@@ -234,7 +238,7 @@ const NewCampaign = ({ user }: IProps) => {
                 </Divider>
 
                 <Row gutter={[20, 0]}>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item
                       label="Company Name"
                       name="company_name"
@@ -248,7 +252,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <Input placeholder="Enter company name" />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={12} sm={12} md={8} lg={8}>
                     <Form.Item
                       label="Country"
                       name="country"
@@ -265,7 +269,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={12} sm={12} md={8} lg={8}>
                     <Form.Item
                       label="Industry"
                       name="industry"
@@ -276,7 +280,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <Input placeholder="Enter industry" />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label="Company Director"
                       name="company_director"
@@ -290,7 +294,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <Input placeholder="Enter the director" />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label="Company Director's Email"
                       name="company_director_email"
@@ -311,7 +315,7 @@ const NewCampaign = ({ user }: IProps) => {
                 </Divider>
 
                 <Row gutter={[20, 0]}>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label="Campaign Name"
                       name="name"
@@ -325,7 +329,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <Input placeholder="Enter campaign name" />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label="Acronim"
                       name="acronim"
@@ -339,7 +343,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={12} lg={8}>
                     <Form.Item
                       label="Project Type"
                       name="type"
@@ -357,7 +361,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={12} lg={8}>
                     <Form.Item
                       label="SME Sub Type"
                       name="subtype"
@@ -375,7 +379,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={24} lg={8}>
                     <Form.Item label="Password">
                       <Space.Compact style={{ width: '100%' }}>
                         <Form.Item noStyle name="password">
@@ -393,8 +397,10 @@ const NewCampaign = ({ user }: IProps) => {
                       </Space.Compact>
                     </Form.Item>
                   </Col>
+
                   <Divider dashed />
-                  <Col span={6}>
+
+                  <Col xs={12} sm={12} md={8} lg={8}>
                     <Form.Item
                       label="Tenor"
                       name="tenor"
@@ -409,7 +415,7 @@ const NewCampaign = ({ user }: IProps) => {
                       <InputNumber style={{ width: '100%' }} />
                     </Form.Item>
                   </Col>
-                  <Col span={9}>
+                  <Col xs={12} sm={12} md={8} lg={8}>
                     <Form.Item
                       label="Project Return"
                       name="return"
@@ -428,7 +434,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={9}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item
                       label="Risk"
                       name="risk"
@@ -451,7 +457,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item
                       label="Minimum Investment Amount"
                       name="minimum_invest_amount"
@@ -471,7 +477,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={9}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item
                       label="Total Funding Amount"
                       name="total_invest_amount"
@@ -491,7 +497,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={9}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item label="Funded" name="funded">
                       <InputNumber
                         style={{ width: '100%' }}
@@ -503,7 +509,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label={`Release Date & Time`}
                       name="release_datetime"
@@ -515,7 +521,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label={`Close Date & Time`}
                       name="expiry_datetime"
@@ -527,7 +533,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={12} lg={8}>
                     <Form.Item
                       label="Status"
                       name="is_enable"
@@ -548,7 +554,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={12} lg={8}>
                     <Form.Item
                       label="Email Payout Reminder"
                       name="send_payout_reminder"
@@ -569,7 +575,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={24} lg={8}>
                     <Form.Item
                       label="Email Requirements"
                       name="requirement_reminder"
@@ -590,12 +596,12 @@ const NewCampaign = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={24} lg={12}>
                     <Form.Item label={`Snippet`} name="snippet" required>
                       <Input.TextArea rows={5} />
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={24} md={12} lg={6}>
                     <Form.Item label="Upload Logo" name="logo">
                       <Upload
                         action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
@@ -614,7 +620,7 @@ const NewCampaign = ({ user }: IProps) => {
                       </Upload>
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col xs={24} sm={24} md={12} lg={6}>
                     <Form.Item label="Upload Cover" name="cover_image">
                       <Upload
                         action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
@@ -634,6 +640,7 @@ const NewCampaign = ({ user }: IProps) => {
                     </Form.Item>
                   </Col>
                 </Row>
+
                 <Row className="mt-1 mb-1">
                   <Col span={24}>
                     <Form.Item
@@ -705,7 +712,7 @@ const NewCampaign = ({ user }: IProps) => {
                 </Divider>
 
                 <Row className="mt-1" gutter={20}>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item label="Campaign 1" name="related_campaign_id_1">
                       <Select
                         showSearch
@@ -719,7 +726,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item label="Campaign 2" name="related_campaign_id_2">
                       <Select
                         showSearch
@@ -733,7 +740,7 @@ const NewCampaign = ({ user }: IProps) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col xs={24} sm={24} md={8} lg={8}>
                     <Form.Item label="Campaign 3" name="related_campaign_id_3">
                       <Select
                         showSearch
@@ -759,6 +766,7 @@ const NewCampaign = ({ user }: IProps) => {
                         htmlType="submit"
                         style={{ width: '185px' }}
                         loading={loading}
+                        icon={<SendOutlined />}
                       >
                         Submit
                       </Button>
@@ -825,7 +833,7 @@ const NewCampaign = ({ user }: IProps) => {
         </Typography.Title>
 
         <Tabs
-          tabPosition={'right'}
+          tabPosition={screens.xl ? 'right' : 'top'}
           items={[
             {
               label: `Campaign Form`,
