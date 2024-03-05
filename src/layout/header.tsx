@@ -6,7 +6,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Menu, Space, Button, Dropdown } from 'antd'
+import { Menu, Space, Button, Dropdown, Grid } from 'antd'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 
@@ -54,16 +54,11 @@ const HeaderLayout = ({ onChangeMode }: IProps) => {
   ]
 
   return (
-    <Space className="space-between">
-      <h4 style={{ margin: 0 }}>{`Assalamu'alaikum`}</h4>
-      <span>
-        <Dropdown menu={{ items }} placement="bottomRight" arrow>
-          <Button shape="circle" type="dashed">
-            <UserOutlined />
-          </Button>
-        </Dropdown>
-      </span>
-    </Space>
+    <Dropdown menu={{ items }} placement="bottomRight" arrow>
+      <Button shape="circle" type="dashed">
+        <UserOutlined />
+      </Button>
+    </Dropdown>
   )
 }
 

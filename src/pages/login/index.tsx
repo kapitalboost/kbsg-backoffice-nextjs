@@ -8,15 +8,18 @@ import {
   Space,
   Alert,
   notification,
+  Grid,
 } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Head from 'next/head'
-import ForgotPassword from './forgotPassword'
+// import ForgotPassword from './forgotPassword'
 
 import { signIn } from 'next-auth/react'
-import { redirect } from 'next/navigation'
 import Router from 'next/router'
-import { LoginOutlined, ReloadOutlined, RestOutlined } from '@ant-design/icons'
+import { LoginOutlined, ReloadOutlined } from '@ant-design/icons'
+import { isMobile, isDesktop, isTablet } from '@/utils/screen'
+
+const { useBreakpoint } = Grid
 
 interface Props {
   without_layout: boolean
@@ -26,6 +29,14 @@ const Login = ({ without_layout }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const screens = useBreakpoint()
+
+  useEffect(() => {
+    console.log('Mobile >> ', isMobile(screens))
+    console.log('Tablet >> ', isTablet(screens))
+    console.log('Desktop >> ', isDesktop(screens))
+  })
 
   const onFinish = async (values: any) => {
     setError('')
@@ -74,25 +85,51 @@ const Login = ({ without_layout }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main data-page="login">
-        <Row gutter={8} align="middle" style={{ height: '100vh' }}>
-          <Col span={16} className="text-center">
-            <img
-              src="https://res.cloudinary.com/kbas/image/upload/v1677120908/Illustration/illustration_opbic0.svg"
-              alt="Illustration"
-            />
+        <Row
+          align={isMobile(screens) ? 'middle' : 'middle'}
+          style={{ height: isMobile(screens) || screens.sm ? 'auto' : '100vh' }}
+        >
+          <Col sm={24} md={24} lg={14} xl={14} className="text-center">
+            {isMobile(screens) || screens.sm ? (
+              <img
+                className="text-center"
+                src={
+                  'https://res.cloudinary.com/kbas/image/upload/v1562814565/logo/LOGO-17_djoes1.png'
+                }
+                alt="Illustration"
+                width={'75%'}
+                style={{
+                  margin: 'auto',
+                  marginBottom: '15px',
+                  padding: '100px 0 10px',
+                }}
+              />
+            ) : (
+              <img
+                className="illus hide-on-mobile"
+                src={
+                  'https://res.cloudinary.com/kbas/image/upload/v1677120908/Illustration/illustration_opbic0.svg'
+                }
+                alt="Illustration"
+                width={'60%'}
+                style={{
+                  margin: 'auto',
+                }}
+              />
+            )}
           </Col>
-          <Col span={8} className="login-form">
+
+          <Col sm={24} md={24} lg={10} xl={10} className="login-form">
             <Space direction="vertical">
-              <h1 className={`m-0`}>Kapital Boost PTE LTD</h1>
+              <h1 className={`m-0 text-center-on-mobile`}>Sign In</h1>
+
               <p
-                className={`m-0`}
-                style={{ fontSize: '18px' }}
+                className={`m-0 text-center-on-mobile`}
+                style={{ fontSize: '1.2rem' }}
               >{`Assalamu'alaikum KB's Team`}</p>
 
               <Form
                 name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
                 style={{ marginTop: 25 }}
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
@@ -109,7 +146,7 @@ const Login = ({ without_layout }: Props) => {
                     { required: true, message: 'Please input your email!' },
                   ]}
                 >
-                  <Input />
+                  <Input size="large" />
                 </Form.Item>
 
                 <Form.Item
@@ -119,7 +156,7 @@ const Login = ({ without_layout }: Props) => {
                     { required: true, message: 'Please input your password!' },
                   ]}
                 >
-                  <Input.Password />
+                  <Input.Password size="large" />
                 </Form.Item>
 
                 {/* <Form.Item>
@@ -139,6 +176,7 @@ const Login = ({ without_layout }: Props) => {
                       htmlType="submit"
                       loading={loading}
                       icon={<LoginOutlined />}
+                      style={{ width: '175px' }}
                     >
                       Login
                     </Button>

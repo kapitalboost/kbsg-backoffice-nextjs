@@ -1,24 +1,18 @@
-import React, { Profiler, useState } from 'react'
+import React, { useState } from 'react'
 import { SessionProvider } from 'next-auth/react'
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-  BarsOutlined,
-  MoneyCollectOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from '@ant-design/icons'
-import type { MenuProps } from 'antd'
-import { Breadcrumb, Layout, Menu, theme, Row, Col, Space } from 'antd'
+import { Button, Grid, Layout, Menu, Space, theme } from 'antd'
 import HeaderLayout from './header'
 import Head from 'next/head'
-import Link from 'next/link'
 import { menuItems } from './menuItems'
+import {
+  CloseOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons'
 
 const { Header, Content, Footer, Sider } = Layout
+
+const { useBreakpoint } = Grid
 
 type LayoutProps = {
   children: React.ReactNode
@@ -33,10 +27,11 @@ const KbLayout = ({
   themeMode,
   onChangeMode,
 }: LayoutProps) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState<any>(true)
   const {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
+  const screens = useBreakpoint()
 
   return (
     <>
@@ -46,13 +41,20 @@ const KbLayout = ({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <SessionProvider session={session}>
         <Layout style={{ minHeight: '100vh', background: colorBgLayout }}>
           <Sider
+            collapsedWidth={
+              screens.xs || (screens.sm && screens.xl === false) ? '0' : '80'
+            }
             collapsible
             collapsed={collapsed}
             theme={themeMode ? 'dark' : 'light'}
             onCollapse={() => setCollapsed(!collapsed)}
+            trigger={
+              (screens.xs || (screens.sm && screens.xl === false)) && null
+            }
           >
             <div
               style={{
@@ -63,21 +65,38 @@ const KbLayout = ({
                   : 'rgba(255, 255, 255, 0.2)',
               }}
             >
-              {collapsed ? (
-                <div className="text-center">
-                  <img
-                    src={`https://res.cloudinary.com/kbas/image/upload/v1562814584/logo/LOGO-19-19_has4sh.png`}
-                    width={`25`}
-                    alt={`logo kb`}
-                  />
-                </div>
-              ) : (
-                <img
-                  src={`https://res.cloudinary.com/kbas/image/upload/v1562814565/logo/LOGO-17_djoes1.png`}
-                  height={23}
-                  alt={`logo kb`}
-                />
-              )}
+              <>
+                {collapsed ? (
+                  <div className="text-center">
+                    <img
+                      src={`https://res.cloudinary.com/kbas/image/upload/v1562814584/logo/LOGO-19-19_has4sh.png`}
+                      width={`25`}
+                      alt={`logo kb`}
+                    />
+                  </div>
+                ) : (
+                  <Space align="center" className="space-between">
+                    <img
+                      src={`https://res.cloudinary.com/kbas/image/upload/v1562814565/logo/LOGO-17_djoes1.png`}
+                      height={23}
+                      alt={`logo kb`}
+                    />
+                    {!screens.lg && (
+                      <Button
+                        type="text"
+                        icon={
+                          collapsed ? <MenuUnfoldOutlined /> : <CloseOutlined />
+                        }
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{
+                          fontSize: '16px',
+                          padding: '0',
+                        }}
+                      />
+                    )}
+                  </Space>
+                )}
+              </>
             </div>
             <Menu
               theme={themeMode ? 'dark' : 'light'}
@@ -89,13 +108,36 @@ const KbLayout = ({
           <Layout className="site-layout">
             <Header
               style={{
-                padding: '0 20px',
+                padding: '0 20px 0 0',
                 background: colorBgContainer,
               }}
             >
-              <HeaderLayout onChangeMode={onChangeMode} />
+              <Space className="space-between">
+                {screens.xs || (screens.sm && screens.xl === false) ? (
+                  <Button
+                    type="text"
+                    icon={
+                      collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
+                    }
+                    onClick={() => setCollapsed(!collapsed)}
+                    style={{
+                      fontSize: '16px',
+                      width: 64,
+                      height: 64,
+                    }}
+                  />
+                ) : (
+                  <>&nbsp;</>
+                )}
+                <HeaderLayout onChangeMode={onChangeMode} />
+              </Space>
             </Header>
-            <Content style={{ margin: '0 16px', background: colorBgLayout }}>
+            <Content
+              style={{
+                margin: screens.xs || screens.sm ? '0 8px' : '0 16px',
+                background: colorBgLayout,
+              }}
+            >
               <div
                 style={{
                   padding: '0px',

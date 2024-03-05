@@ -1,6 +1,16 @@
 import { Api } from '@/api/api'
-import { Button, Card, notification, Space, Table, Typography } from 'antd'
+import {
+  Button,
+  Card,
+  Grid,
+  notification,
+  Space,
+  Table,
+  Typography,
+} from 'antd'
 import { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 const columns = [
   {
@@ -26,6 +36,7 @@ interface IProps {
 }
 
 const DataNewUsers = ({ token, title }: IProps) => {
+  const screens = useBreakpoint()
   const [user, setUser] = useState<any>({
     data: [],
   })
@@ -57,12 +68,16 @@ const DataNewUsers = ({ token, title }: IProps) => {
   }
 
   return (
-    <Card>
-      <div className="card-title">
+    <Card
+      bordered={false}
+      bodyStyle={{ padding: '0', overflow: 'hidden' }}
+      title={
         <Space align={`center`} size={`small`} className="space-between">
-          <Typography.Title level={5} className="m-0 mb-0-1">
-            {title}
-          </Typography.Title>
+          {screens.xs ? (
+            <Typography.Text strong>{title}</Typography.Text>
+          ) : (
+            <Typography.Title level={5}>{title}</Typography.Title>
+          )}
           <Space wrap>
             <Button
               size="small"
@@ -78,37 +93,38 @@ const DataNewUsers = ({ token, title }: IProps) => {
             >
               3 days
             </Button>
-            <Button
-              size="small"
-              type={day === 7 ? 'primary' : 'default'}
-              onClick={() => setDay(7)}
-            >
-              7 days
-            </Button>
+            {!screens.xs && (
+              <Button
+                size="small"
+                type={day === 7 ? 'primary' : 'default'}
+                onClick={() => setDay(7)}
+              >
+                7 days
+              </Button>
+            )}
           </Space>
         </Space>
-      </div>
-      <div className="card-body p-0">
-        <Table
-          loading={loading}
-          dataSource={user.data}
-          columns={columns}
-          onChange={handleTableChange}
-          pagination={{
-            total: user?.total,
-            current: user?.current_page,
-            pageSize: 5,
-            showSizeChanger: false,
-          }}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: () => {
-                console.log(record)
-              },
-            }
-          }}
-        />
-      </div>
+      }
+    >
+      <Table
+        loading={loading}
+        dataSource={user.data}
+        columns={columns}
+        onChange={handleTableChange}
+        pagination={{
+          total: user?.total,
+          current: user?.current_page,
+          pageSize: 5,
+          showSizeChanger: false,
+        }}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => {
+              console.log(record)
+            },
+          }
+        }}
+      />
     </Card>
   )
 }

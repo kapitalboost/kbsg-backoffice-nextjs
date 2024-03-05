@@ -2,6 +2,7 @@ import { Api } from '@/api/api'
 import {
   Button,
   Card,
+  Grid,
   InputNumber,
   notification,
   Space,
@@ -11,6 +12,8 @@ import {
 } from 'antd'
 import { useEffect, useState } from 'react'
 import { currency } from '@/utils/helpers'
+
+const { useBreakpoint } = Grid
 
 const columns = [
   {
@@ -48,6 +51,7 @@ interface IProps {
 }
 
 const WithdrawalRequests = ({ token, title }: IProps) => {
+  const screens = useBreakpoint()
   const [withdraw, setWithdraw] = useState<any>({
     data: [],
   })
@@ -77,12 +81,16 @@ const WithdrawalRequests = ({ token, title }: IProps) => {
   }
 
   return (
-    <Card>
-      <div className="card-title">
+    <Card
+      bordered={false}
+      bodyStyle={{ padding: '0', overflow: 'hidden' }}
+      title={
         <Space align={`center`} size={`small`} className="space-between">
-          <Typography.Title level={5} className="m-0 mb-0-1">
-            {title}
-          </Typography.Title>
+          {screens.xs ? (
+            <Typography.Text strong>{title}</Typography.Text>
+          ) : (
+            <Typography.Title level={5}>{title}</Typography.Title>
+          )}
           <Space wrap>
             <Button
               size="small"
@@ -98,30 +106,31 @@ const WithdrawalRequests = ({ token, title }: IProps) => {
             >
               3 days
             </Button>
-            <Button
-              size="small"
-              type={day === 7 ? 'primary' : 'default'}
-              onClick={() => setDay(7)}
-            >
-              7 days
-            </Button>
+            {!screens.xs && (
+              <Button
+                size="small"
+                type={day === 7 ? 'primary' : 'default'}
+                onClick={() => setDay(7)}
+              >
+                7 days
+              </Button>
+            )}
           </Space>
         </Space>
-      </div>
-      <div className="card-body p-0">
-        <Table
-          loading={loading}
-          dataSource={withdraw.data}
-          columns={columns}
-          onChange={handleTableChange}
-          pagination={{
-            total: withdraw?.total,
-            current: withdraw?.current_page,
-            pageSize: 5,
-            showSizeChanger: false,
-          }}
-        />
-      </div>
+      }
+    >
+      <Table
+        loading={loading}
+        dataSource={withdraw.data}
+        columns={columns}
+        onChange={handleTableChange}
+        pagination={{
+          total: withdraw?.total,
+          current: withdraw?.current_page,
+          pageSize: 5,
+          showSizeChanger: false,
+        }}
+      />
     </Card>
   )
 }
