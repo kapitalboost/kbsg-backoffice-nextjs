@@ -1,6 +1,6 @@
 import { Api } from '@/api/api'
 import { teamAnalyst, teamBD } from '@/utils/teamReview'
-import { LoadingOutlined } from '@ant-design/icons'
+import { LoadingOutlined, SendOutlined } from '@ant-design/icons'
 import { Button, Col, Divider, Form, message, Row, Select, Space } from 'antd'
 import { useEffect, useState } from 'react'
 
@@ -92,7 +92,7 @@ const TeamInspector = ({ user, slug }: IProps) => {
           </Divider>
 
           <Row gutter={[30, 0]}>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <Form.Item
                 label="Select Bussines Development"
                 name="bd"
@@ -112,7 +112,7 @@ const TeamInspector = ({ user, slug }: IProps) => {
                 />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col xs={24} sm={24} md={12} lg={12}>
               <Form.Item
                 label="Select Analyst"
                 name="analyst"
@@ -142,8 +142,9 @@ const TeamInspector = ({ user, slug }: IProps) => {
               style={{ width: 150 }}
               htmlType={`submit`}
               disabled={btnLoading}
+              icon={<SendOutlined />}
             >
-              {btnLoading ? <LoadingOutlined /> : <>Save</>}
+              {btnLoading ? <LoadingOutlined /> : <>Submit</>}
             </Button>
             <Button onClick={initData}>Reset</Button>
           </Space>

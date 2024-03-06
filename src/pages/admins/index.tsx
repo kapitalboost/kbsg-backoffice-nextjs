@@ -12,6 +12,7 @@ import {
   Breadcrumb,
   Button,
   Card,
+  Grid,
   Input,
   message,
   Modal,
@@ -27,6 +28,8 @@ import FormAdmin from './components/formAdmin'
 import type { InputRef } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   user: any
@@ -48,6 +51,8 @@ const Admins = ({ user }: IProps) => {
   const [admin, setAdmin] = useState({})
   const [admins, setAdmins] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  const screens = useBreakpoint()
 
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
@@ -268,25 +273,30 @@ const Admins = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <h3 className="m-0 fw-300">List of Admins</h3>
+      <Card
+        bodyStyle={!screens.lg ? { padding: '0' } : {}}
+        title={
+          <Space className="space-between">
+            <Typography.Title level={5} className="m-0">
+              List of Admins
+            </Typography.Title>
 
-          <Tooltip title="Add new admin">
-            <Button
-              size="small"
-              icon={<PlusOutlined />}
-              onClick={() => onOpenForm('create', {})}
-            ></Button>
-          </Tooltip>
-        </Space>
-
+            <Tooltip title="Add new admin">
+              <Button
+                size="small"
+                icon={<PlusOutlined />}
+                onClick={() => onOpenForm('create', {})}
+              ></Button>
+            </Tooltip>
+          </Space>
+        }
+      >
         <Table
           dataSource={admins}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
           rowKey={`id`}
+          scroll={{ x: 800 }}
         />
 
         <FormAdmin

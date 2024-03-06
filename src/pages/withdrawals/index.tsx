@@ -6,6 +6,7 @@ import {
   FilterOutlined,
   PlusOutlined,
   SearchOutlined,
+  SendOutlined,
 } from '@ant-design/icons'
 import {
   Button,
@@ -13,6 +14,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Grid,
   Input,
   InputNumber,
   Modal,
@@ -53,6 +55,7 @@ interface DataType {
 }
 
 type DataIndex = keyof DataType
+const { useBreakpoint } = Grid
 
 interface IProps {
   user: any
@@ -83,6 +86,8 @@ const Withdrawals = ({ user }: IProps) => {
     status: '',
     created_at: '',
   })
+
+  const screens = useBreakpoint()
 
   const init = async () => {
     setLoading(true)
@@ -306,14 +311,12 @@ const Withdrawals = ({ user }: IProps) => {
       render: (key: any, data: any, idx: number) => {
         return <>{idx + 1}</>
       },
-      fixed: 'left',
     },
     {
       title: 'User',
       dataIndex: 'user_full_name',
       key: 'user_full_name',
       ...getColumnSearchProps('user_full_name'),
-      fixed: 'left',
       render: (user_full_name: string, data: any) => (
         <Link href={`users/${data?.id}/transactions`} target={`_blank`}>
           {user_full_name}
@@ -324,7 +327,6 @@ const Withdrawals = ({ user }: IProps) => {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      fixed: 'left',
       ...getColumnSearchProps('amount'),
       render: (amount: number) => (
         <span style={{ display: 'block', textAlign: 'right' }}>
@@ -388,7 +390,6 @@ const Withdrawals = ({ user }: IProps) => {
       dataIndex: '',
       key: 'x',
       width: '120px',
-      fixed: 'right',
       render: (data: any) => (
         <Space size={`small`} className="space-end">
           <Tooltip title="See Transfer Proof">
@@ -442,132 +443,125 @@ const Withdrawals = ({ user }: IProps) => {
   }
 
   return (
-    <Card>
-      <Row>
-        <Col span={24}>
-          <Space className="space-between mb-1">
-            <Typography.Title level={3} className="m-0">
-              KB wallet withdrawals
-            </Typography.Title>
-            <Tooltip title="Add withdrawal request">
-              <Button
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => setAddWithdrawalModalOpen(true)}
-              >
-                Add new request
-              </Button>
-            </Tooltip>
-          </Space>
-
-          <Table
-            dataSource={withdrawals}
-            columns={columns}
-            className={'mt-1'}
-            loading={loading}
-            scroll={{ x: 1300 }}
-          />
-
-          <FormWithdrawal
-            isShow={addWithdrawalModalOpen}
-            handleHide={() => setAddWithdrawalModalOpen(false)}
-            token={user?.token}
-            reinitData={init}
-          />
-
-          <FormEditWithdrawal
-            isShow={isModalOpen}
-            handleHide={handleCancel}
-            withdraw={withdrawSelected}
-            token={user?.token}
-            reinitData={init}
-          />
-
-          <Modal
-            title="Update withdrawal - Gael Ulrich ZAFIMINO"
-            open={false}
-            onCancel={handleCancel}
-            footer={false}
-          >
-            <Form
-              form={form}
-              name="basic"
-              labelCol={{ span: 6 }}
-              wrapperCol={{ span: 18 }}
-              style={{ maxWidth: 600 }}
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              className="mt-2"
+    <Card
+      title={
+        <Space className="space-between" align="center">
+          <Typography.Title level={5} className="m-0">
+            KB wallet withdrawals
+          </Typography.Title>
+          <Tooltip title="Add withdrawal request">
+            <Button
+              size="small"
+              icon={<PlusOutlined />}
+              onClick={() => setAddWithdrawalModalOpen(true)}
             >
-              <Form.Item
-                label="Amount"
-                name="amount"
-                rules={[{ required: true }]}
-              >
-                <Input readOnly />
-              </Form.Item>
+              Add new request
+            </Button>
+          </Tooltip>
+        </Space>
+      }
+    >
+      <Table
+        dataSource={withdrawals}
+        columns={columns}
+        className={'mt-1'}
+        loading={loading}
+        scroll={{ x: 1300 }}
+      />
 
-              <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true }]}
-              >
-                <Select placeholder="Select status" allowClear>
-                  <Select.Option value={1}>Paid</Select.Option>
-                  <Select.Option value={0}>Pending</Select.Option>
-                </Select>
-              </Form.Item>
+      <FormWithdrawal
+        isShow={addWithdrawalModalOpen}
+        handleHide={() => setAddWithdrawalModalOpen(false)}
+        token={user?.token}
+        reinitData={init}
+      />
 
-              <Form.Item
-                label="Proof"
-                name="proof"
-                rules={[
-                  { required: true, message: 'Please upload the proof!' },
-                ]}
-              >
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  defaultFileList={[...fileList]}
-                  maxCount={1}
-                >
-                  {/* <Button icon={<UploadOutlined />}>Upload</Button> */}
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                </Upload>
-              </Form.Item>
+      <FormEditWithdrawal
+        isShow={isModalOpen}
+        handleHide={handleCancel}
+        withdraw={withdrawSelected}
+        token={user?.token}
+        reinitData={init}
+      />
 
-              <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-                <Space>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                  <Button onClick={() => form.resetFields()}>Reset</Button>
-                </Space>
-              </Form.Item>
-            </Form>
-          </Modal>
+      <Modal
+        title="Update withdrawal - Gael Ulrich ZAFIMINO"
+        open={false}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        <Form
+          form={form}
+          name="basic"
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 18 }}
+          style={{ maxWidth: 600 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          className="mt-2"
+        >
+          <Form.Item label="Amount" name="amount" rules={[{ required: true }]}>
+            <Input readOnly />
+          </Form.Item>
 
-          <Modal
-            open={previewOpen}
-            title={previewTitle}
-            footer={null}
-            onCancel={handleClosePreview}
-            width={`60%`}
-            style={{ top: 10 }}
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
+            <Select placeholder="Select status" allowClear>
+              <Select.Option value={1}>Paid</Select.Option>
+              <Select.Option value={0}>Pending</Select.Option>
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Proof"
+            name="proof"
+            rules={[{ required: true, message: 'Please upload the proof!' }]}
           >
-            <img
-              alt={previewTitle}
-              style={{ width: '100%', marginTop: '15px' }}
-              src={previewImage}
-              loading={'lazy'}
-            />
-          </Modal>
-        </Col>
-      </Row>
+            <Upload
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              listType="picture-card"
+              defaultFileList={[...fileList]}
+              maxCount={1}
+            >
+              {/* <Button icon={<UploadOutlined />}>Upload</Button> */}
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+            <Space>
+              <Button
+                type="primary"
+                htmlType="submit"
+                icon={<SendOutlined />}
+                style={{ width: '150px' }}
+              >
+                Submit
+              </Button>
+              <Button onClick={() => form.resetFields()}>Reset</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        open={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleClosePreview}
+        width={screens.lg ? `60%` : `95%`}
+        style={{ top: 10 }}
+      >
+        <img
+          alt={previewTitle}
+          style={{ width: '100%', marginTop: '15px' }}
+          src={previewImage}
+          loading={'lazy'}
+        />
+      </Modal>
     </Card>
   )
 }

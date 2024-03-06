@@ -156,3 +156,29 @@ canvas.signer.edit {
 
 @import 'login';
 @import 'card';
+
+@media (max-width: 860px) {
+  .ant-layout-sider-zero-width-trigger {
+    top: 70px !important;
+  }
+  .ant-breadcrumb {
+    > ol {
+      padding: 0px 20px;
+    }
+  }
+  .ant-layout-sider {
+    max-width: 275px !important;
+    min-width: 275px !important;
+    width: 275px !important;
+    position: fixed !important;
+    height: 110vh;
+    top: 0;
+    z-index: 99;
+  }
+
+  .ant-layout-sider.ant-layout-sider-collapsed {
+    max-width: 0 !important;
+    min-width: 0 !important;
+    width: 0 !important;
+  }
+}

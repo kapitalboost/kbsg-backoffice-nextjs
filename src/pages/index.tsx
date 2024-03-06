@@ -25,48 +25,48 @@ const Dashboard = ({ token }: IProps) => {
       </Breadcrumb>
 
       <Row gutter={[16, 16]}>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReport token={token} getData="user" title="Users" />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReport token={token} getData="investment" title="Investments" />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportCampaign
             token={token}
             getData="campaigns"
             title="Campaigns"
           />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportAmountInvested
             token={token}
             getData="amount invested"
             title="Amount invested"
           />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportKBWallet
             token={token}
             getData="kb wallet"
             title="KB Wallet"
           />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportLast3Days
             token={token}
             getData="last 3 days"
             title="Last 3 Days"
           />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportDevice
             token={token}
             getData="register from"
             title="Register Device"
           />
         </Col>
-        <Col className="gutter-row" xs={24} md={8} xl={6}>
+        <Col className="gutter-row" xs={12} md={8} xl={6}>
           <CardReportDevice
             token={token}
             getData="investment from"
@@ -78,10 +78,10 @@ const Dashboard = ({ token }: IProps) => {
       <Divider dashed />
 
       <Row gutter={[16, 16]}>
-        <Col md={24} xl={12}>
-          <DataNewUsers token={token} title="Users Need To Be Reviewed" />
+        <Col xs={24} sm={24} md={12} xl={12}>
+          <DataNewUsers token={token} title="New Users" />
         </Col>
-        <Col md={24} xl={12}>
+        <Col xs={24} sm={24} md={12} xl={12}>
           <WithdrawalRequests token={token} title="Withdrawal Requests" />
         </Col>
       </Row>

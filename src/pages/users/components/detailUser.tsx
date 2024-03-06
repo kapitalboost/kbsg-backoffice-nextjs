@@ -2,6 +2,7 @@ import {
   Badge,
   Button,
   Divider,
+  Grid,
   Modal,
   Space,
   Tabs,
@@ -22,6 +23,8 @@ import { useEffect, useState } from 'react'
 import { Api } from '@/api/api'
 import { setColorStatus } from '@/utils/userStatus'
 
+const { useBreakpoint } = Grid
+
 interface IProps {
   isModalOpen: boolean
   handleCancel: any
@@ -40,6 +43,8 @@ const ModalDetailUser = ({
   const [dataUser, setDataUser] = useState<any>(null)
 
   const statusToBeDesabled = ['approved', 'rejected', 'blacklisted']
+
+  const screens = useBreakpoint()
 
   const initUser = () => {
     setLoading(true)
@@ -107,9 +112,13 @@ const ModalDetailUser = ({
     <Modal
       title={
         dataUser && (
-          <Space className="space-between">
-            <Typography.Title level={4}>
-              Detail User : {dataUser?.full_name}
+          <Space
+            className="space-between"
+            align="end"
+            style={{ height: '50px' }}
+          >
+            <Typography.Title level={4} className="m-0">
+              Detail User
             </Typography.Title>
             <Tag color={setColorStatus(dataUser?.status)}>
               {dataUser.status.toUpperCase()}
@@ -132,7 +141,7 @@ const ModalDetailUser = ({
         ) : (
           <>
             <Tabs
-              tabPosition="right"
+              tabPosition={screens.xl ? 'right' : 'top'}
               defaultActiveKey={tabActive}
               items={items}
               onChange={onChangeTab}
@@ -149,6 +158,7 @@ const ModalDetailUser = ({
                       danger
                       icon={<CloseOutlined />}
                       onClick={() => onSetStatus('rejected')}
+                      size={screens.xs ? 'small' : 'middle'}
                     >
                       REJECT
                     </Button>
@@ -158,6 +168,7 @@ const ModalDetailUser = ({
                       danger
                       icon={<CloseOutlined />}
                       onClick={() => onSetStatus('blacklisted')}
+                      size={screens.xs ? 'small' : 'middle'}
                     >
                       BLACKLIST
                     </Button>
@@ -170,8 +181,9 @@ const ModalDetailUser = ({
                       }
                       type="primary"
                       icon={<CheckOutlined />}
-                      style={{ width: '200px' }}
+                      style={{ width: screens.xs ? 'auto' : '200px' }}
                       onClick={() => onSetStatus('approved')}
+                      size={screens.xs ? 'small' : 'middle'}
                     >
                       APPROVE
                     </Button>

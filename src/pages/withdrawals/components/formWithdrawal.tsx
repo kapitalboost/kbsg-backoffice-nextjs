@@ -1,6 +1,7 @@
 import {
   Button,
   Form,
+  Grid,
   Input,
   InputNumber,
   message,
@@ -10,13 +11,15 @@ import {
   Space,
   Upload,
 } from 'antd'
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { PlusOutlined, SendOutlined, UploadOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import type { UploadFile } from 'antd/es/upload/interface'
 import { Api } from '@/api/api'
 import type { UploadProps } from 'antd'
 
 const fileList: UploadFile[] = []
+
+const { useBreakpoint } = Grid
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -34,6 +37,8 @@ const FormWithdrawal = ({ isShow, handleHide, token, reinitData }: Props) => {
   const [userBankOptions, setUserBankOptions] = useState<any>(null)
   const [onLoadBank, setOnLoadBank] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
+
+  const screens = useBreakpoint()
 
   useEffect(() => {
     if (!isShow) {
@@ -199,9 +204,23 @@ const FormWithdrawal = ({ isShow, handleHide, token, reinitData }: Props) => {
             </Upload>
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+          <Form.Item
+            wrapperCol={{
+              offset: screens.md ? 6 : 0,
+              xs: 24,
+              sm: 24,
+              md: 18,
+              lg: 18,
+            }}
+          >
             <Space>
-              <Button type="primary" htmlType="submit" loading={submitLoading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={submitLoading}
+                icon={<SendOutlined />}
+                style={{ width: '150px' }}
+              >
                 Submit
               </Button>
               <Button

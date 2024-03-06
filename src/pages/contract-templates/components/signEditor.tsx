@@ -1,9 +1,11 @@
 import { dynamicMenu } from '@/utils/dynamicData'
 import { Editor } from '@tinymce/tinymce-react'
-import { Button } from 'antd'
+import { Button, Grid } from 'antd'
 import { useEffect, useState } from 'react'
 import SignaturePosition from '../components/signaturePosition'
 import { EditTwoTone, FormOutlined } from '@ant-design/icons'
+
+const { useBreakpoint } = Grid
 
 const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
 
@@ -22,6 +24,8 @@ const ContractEditorSignForm = ({
 }: MainProps) => {
   const [loading, setLoading] = useState(true)
   const [signPositionPupup, setSignPositionPopup] = useState(false)
+
+  const screens = useBreakpoint()
 
   const handleEditorChange = (content: any, editor: any) => {
     onChangeContent(content)
@@ -45,6 +49,7 @@ const ContractEditorSignForm = ({
             size="small"
             icon={<FormOutlined />}
             onClick={() => setSignPositionPopup(true)}
+            disabled={!screens.xl}
           >
             Sign Position
           </Button>

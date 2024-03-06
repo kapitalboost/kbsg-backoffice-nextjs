@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   Form,
+  Grid,
   Input,
   message,
   Modal,
@@ -19,11 +20,14 @@ import {
   Table,
   Tag,
   Tooltip,
+  Typography,
 } from 'antd'
 import { getSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 const { Search } = Input
 
@@ -42,6 +46,8 @@ const ContractTemplates = ({ user }: IProps) => {
   const [filteredContracts, setFilteredContracts] = useState<any>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [form] = Form.useForm()
+
+  const screens = useBreakpoint()
 
   const initContract = () => {
     setLoading(true)
@@ -146,7 +152,7 @@ const ContractTemplates = ({ user }: IProps) => {
         <Space size={`small`} className="space-end">
           <Tooltip title="Edit contract template">
             <Link href={`/contract-templates/${data?.id}`}>
-              <Button size="small">
+              <Button size="small" disabled={!screens.md}>
                 <EditOutlined />
               </Button>
             </Link>
@@ -194,32 +200,41 @@ const ContractTemplates = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <h3 className="m-0 fw-300">Contact templates</h3>
+      <Card
+        bodyStyle={!screens.lg ? { padding: '0' } : {}}
+        title={
+          <Space className="space-between">
+            <Typography.Title level={5} className="m-0">
+              Contact templates
+            </Typography.Title>
 
-          <Space wrap>
-            <Search
-              allowClear
-              placeholder="Search contract"
-              onSearch={onSearch}
-              style={{ width: 200 }}
-            />
-            <Tooltip title="Create new template" placement={`topRight`}>
-              {/* <Link href={'/contract-templates/new'}> */}
-              <Button type="dashed" onClick={() => setIsModalOpen(true)}>
-                <PlusOutlined />
-              </Button>
-              {/* </Link> */}
-            </Tooltip>
+            <Space wrap>
+              <Search
+                allowClear
+                placeholder="Search contract"
+                onSearch={onSearch}
+                style={{ width: screens.xs ? '130px' : '200px' }}
+              />
+              <Tooltip title="Create new template" placement={`topRight`}>
+                {/* <Link href={'/contract-templates/new'}> */}
+                <Button
+                  type="dashed"
+                  onClick={() => setIsModalOpen(true)}
+                  disabled={!screens.md}
+                >
+                  <PlusOutlined />
+                </Button>
+                {/* </Link> */}
+              </Tooltip>
+            </Space>
           </Space>
-        </Space>
-
+        }
+      >
         <Table
           dataSource={filteredContracts}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
+          scroll={{ x: 1200 }}
         />
       </Card>
 

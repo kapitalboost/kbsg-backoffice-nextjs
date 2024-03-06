@@ -128,7 +128,7 @@ const Banks = ({ user }: IProps) => {
               columns={columns}
               className={'mt-1'}
               loading={loading}
-              scroll={{ x: 1300 }}
+              scroll={{ x: 800 }}
             />
           </Col>
         </Row>

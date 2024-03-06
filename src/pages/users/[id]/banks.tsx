@@ -136,6 +136,7 @@ const Banks = ({ user }: IProps) => {
               items,
             }}
             placement="bottomRight"
+            trigger={['click']}
           >
             <a onClick={(e) => e.preventDefault()}>
               <Space>
@@ -147,7 +148,20 @@ const Banks = ({ user }: IProps) => {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
+      <Card
+        title={
+          <Space className="space-between m-0" align="center">
+            <Typography.Title level={5} className="m-0">
+              Data Banks - {dataUser?.firstname}
+            </Typography.Title>
+            <Search
+              allowClear
+              onSearch={onSearch}
+              placeholder="Find by bank name"
+            />
+          </Space>
+        }
+      >
         {dataUser === false ? (
           <div className="text-center my-5">
             <Typography.Title level={2} type={'danger'}>
@@ -163,27 +177,13 @@ const Banks = ({ user }: IProps) => {
             </Link>
           </div>
         ) : (
-          <Row>
-            <Col span={24}>
-              <Space className="space-between mb-1">
-                <Typography.Title level={4} className="m-0">
-                  Data Banks - {dataUser?.full_name}
-                </Typography.Title>
-                <Search
-                  allowClear
-                  onSearch={onSearch}
-                  placeholder="Find by bank name"
-                />
-              </Space>
-
-              <Table
-                dataSource={filteredBanks}
-                columns={columns}
-                className={'mt-1'}
-                loading={loading}
-              />
-            </Col>
-          </Row>
+          <Table
+            dataSource={filteredBanks}
+            columns={columns}
+            className={'mt-1'}
+            loading={loading}
+            scroll={{ x: 800 }}
+          />
         )}
       </Card>
     </>

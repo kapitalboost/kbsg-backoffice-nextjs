@@ -10,6 +10,7 @@ import {
   Breadcrumb,
   Button,
   Card,
+  Grid,
   Input,
   message,
   Modal,
@@ -27,6 +28,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { InputRef } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
+const { useBreakpoint } = Grid
 
 interface DataType {
   key: string
@@ -50,6 +52,7 @@ const Blogs = ({ user }: IProps) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
+  const screens = useBreakpoint()
 
   const handleSearch = (
     selectedKeys: string[],
@@ -272,7 +275,7 @@ const Blogs = ({ user }: IProps) => {
         <Space size={`small`} className="space-end">
           <Tooltip title="Edit data blog">
             <Link href={`/blogs/${data.id}`}>
-              <Button size="small">
+              <Button size="small" disabled={!screens.md}>
                 <EditOutlined />
               </Button>
             </Link>
@@ -294,26 +297,33 @@ const Blogs = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <Typography.Title level={3} className={`m-0 p-0`}>
-            List of Blogs
-          </Typography.Title>
+      <Card
+        bodyStyle={!screens.lg ? { padding: '0' } : {}}
+        title={
+          <Space className="space-between">
+            <Typography.Title level={5} className={`m-0`}>
+              List of Blogs
+            </Typography.Title>
 
-          <Tooltip title="Add new blog">
-            <Link href={`/blogs/add`}>
-              <Button size="small" icon={<PlusOutlined />}>
-                Add a New Blog
-              </Button>
-            </Link>
-          </Tooltip>
-        </Space>
-
+            <Tooltip title="Add new blog">
+              <Link href={`/blogs/add`}>
+                <Button
+                  size="small"
+                  icon={<PlusOutlined />}
+                  disabled={!screens.md}
+                >
+                  Add a New Blog
+                </Button>
+              </Link>
+            </Tooltip>
+          </Space>
+        }
+      >
         <Table
           dataSource={blogs}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
+          scroll={{ x: 800 }}
         />
       </Card>
 

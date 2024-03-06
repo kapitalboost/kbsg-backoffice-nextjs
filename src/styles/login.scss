@@ -1,5 +1,21 @@
 [data-page='login'] {
-  width: 95vw;
+  width: 100vw;
+  margin: auto;
+  background-image: linear-gradient(
+    to right top,
+    #c9f6cb,
+    #bbf6d3,
+    #aff5dd,
+    #a6f3e6,
+    #9ff1ef,
+    #9fecf8,
+    #a4e7fd,
+    #aee1ff,
+    #c6d6ff,
+    #e3caf5,
+    #f9c0db,
+    #ffbcbc
+  );
 
   .login-form {
     display: block;
@@ -8,6 +24,45 @@
 
     .ant-space {
       width: 100%;
+    }
+  }
+
+  .hide-on-mobile {
+    display: block;
+  }
+
+  .hide-on-desktop {
+    display: none;
+  }
+
+  .text-center-on-mobile {
+    text-align: left;
+  }
+
+  @media (max-width: 860px) {
+    width: 100vw;
+    min-height: 100vh;
+    margin-bottom: 0;
+
+    .login-form {
+      margin-top: 35px;
+      padding: 0 45px;
+    }
+
+    img.illus {
+      display: none;
+    }
+
+    .hide-on-mobile {
+      display: none;
+    }
+
+    .hide-on-desktop {
+      display: block;
+    }
+
+    .text-center-on-mobile {
+      text-align: center;
     }
   }
 }

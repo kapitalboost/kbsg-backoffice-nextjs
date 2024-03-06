@@ -2,7 +2,9 @@ import { Api } from '@/api/api'
 import { LoadingOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
 import { currency } from '@/utils/helpers'
-import { Card, Typography } from 'antd'
+import { Card, Grid, Typography } from 'antd'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   token: string
@@ -11,6 +13,7 @@ interface IProps {
 }
 
 const CardReportKBWallet = ({ token, getData, title }: IProps) => {
+  const screens = useBreakpoint()
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
 
@@ -33,8 +36,11 @@ const CardReportKBWallet = ({ token, getData, title }: IProps) => {
   }, [])
 
   return (
-    <Card style={{ height: '165px' }}>
-      <Typography.Title level={4} className="m-0 mb-0-1">
+    <Card
+      bodyStyle={screens.xs ? { padding: '5px 10px' } : {}}
+      style={{ height: '165px' }}
+    >
+      <Typography.Title level={5} className="m-0 mb-0-1">
         {title}
       </Typography.Title>
 
