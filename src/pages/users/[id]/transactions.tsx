@@ -14,6 +14,7 @@ import {
   Button,
   Card,
   Dropdown,
+  Grid,
   InputNumber,
   message,
   Modal,
@@ -34,6 +35,8 @@ import { useRouter } from 'next/router'
 import { currency } from '@/utils/helpers'
 import type { MenuProps } from 'antd'
 import Link from 'next/link'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   user: any
@@ -60,6 +63,7 @@ const UserTransaction = ({ user }: IProps) => {
   const [withdraws, setWithdraws] = useState<any>(null)
 
   const user_id = router.query.id
+  const screens = useBreakpoint()
 
   const initTransaction = () => {
     setLoadingTransaction(true)
@@ -338,6 +342,7 @@ const UserTransaction = ({ user }: IProps) => {
             dataSource={transactions}
             columns={columns}
             loading={loadingTransaction}
+            scroll={{ x: 800 }}
           />
         </>
       ),
@@ -350,6 +355,7 @@ const UserTransaction = ({ user }: IProps) => {
           dataSource={withdraws}
           columns={columnsWithdrawal}
           loading={loadingWithdraw}
+          scroll={{ x: 800 }}
         />
       ),
     },
@@ -379,6 +385,7 @@ const UserTransaction = ({ user }: IProps) => {
               items,
             }}
             placement="bottomRight"
+            trigger={['click']}
           >
             <a onClick={(e) => e.preventDefault()}>
               <Space>
@@ -390,19 +397,21 @@ const UserTransaction = ({ user }: IProps) => {
         </Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <Typography.Title level={4} className="mb-1 mt-1">
-            Data Wallet {userName && `- ${userName}`}
-          </Typography.Title>
+      <Card
+        title={
+          <Space className="space-between" align="center">
+            <Typography.Title level={5} className="m-0">
+              Data Wallet {userName && `- ${userName}`}
+            </Typography.Title>
 
-          <h3 className="m-0 fw-300">
-            Wallet balance : <b>{currency(walletAmount)}</b>
-          </h3>
-        </Space>
-
+            <h3 className="m-0 fw-300">
+              Wallet balance : <b>{currency(walletAmount)}</b>
+            </h3>
+          </Space>
+        }
+      >
         <Tabs
-          tabPosition="right"
+          tabPosition={screens.xl ? 'right' : 'top'}
           defaultActiveKey="1"
           items={itemsTab}
           onChange={onChange}

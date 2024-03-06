@@ -1,7 +1,19 @@
 import { Api } from '@/api/api'
-import { Button, Form, Input, Modal, notification, Select, Space } from 'antd'
+import { SendOutlined } from '@ant-design/icons'
+import {
+  Button,
+  Form,
+  Grid,
+  Input,
+  Modal,
+  notification,
+  Select,
+  Space,
+} from 'antd'
 
 import { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 interface Props {
   isShow: boolean
@@ -22,6 +34,7 @@ const FormAdmin = ({
 }: Props) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  const screens = useBreakpoint()
 
   useEffect(() => {
     if (!isShow) {
@@ -57,7 +70,7 @@ const FormAdmin = ({
 
   return (
     <Modal
-      title={action === 'create' ? `Create new admin` : `Edit data admin`}
+      title={action === 'create' ? `Create New Admin` : `Edit Data Admin`}
       open={isShow}
       onCancel={handleHide}
       footer={false}
@@ -114,9 +127,23 @@ const FormAdmin = ({
           </Select>
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+        <Form.Item
+          wrapperCol={{
+            offset: screens.md ? 6 : 0,
+            xs: 24,
+            sm: 24,
+            md: 18,
+            lg: 18,
+          }}
+        >
           <Space>
-            <Button type="primary" htmlType="submit" loading={loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              icon={<SendOutlined />}
+              style={{ width: '150px' }}
+            >
               Submit
             </Button>
             <Button onClick={() => form.resetFields()}>Reset</Button>

@@ -390,8 +390,8 @@ const Users = ({ user }: IProps) => {
 
       <Card
         title={
-          <Space className="space-between">
-            <Typography.Title level={3} className="m-0">
+          <Space className="space-between" size={'large'}>
+            <Typography.Title level={5} className="m-0">
               Data Users
             </Typography.Title>
             <RangePicker
@@ -402,7 +402,12 @@ const Users = ({ user }: IProps) => {
           </Space>
         }
       >
-        <Table dataSource={users} columns={columns} loading={loading} />
+        <Table
+          dataSource={users}
+          columns={columns}
+          loading={loading}
+          scroll={{ x: 800 }}
+        />
       </Card>
 
       <ModalDetailUser

@@ -4,6 +4,7 @@ import {
   DownOutlined,
   LoadingOutlined,
   PlusOutlined,
+  SendOutlined,
 } from '@ant-design/icons'
 import {
   Breadcrumb,
@@ -255,6 +256,7 @@ const FormUser = ({ user }: IProps) => {
               items,
             }}
             placement="bottomRight"
+            trigger={['click']}
           >
             <a onClick={(e) => e.preventDefault()}>
               <Space>
@@ -303,7 +305,7 @@ const FormUser = ({ user }: IProps) => {
                   className="mt-2"
                 >
                   <Row gutter={20}>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="First name"
                         name="firstname"
@@ -317,7 +319,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Last name"
                         name="lastname"
@@ -331,7 +333,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Email"
                         name="email"
@@ -345,7 +347,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input readOnly />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Phone No."
                         name="phone_no"
@@ -359,7 +361,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input readOnly />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Date of Birth"
                         name="dob"
@@ -373,7 +375,7 @@ const FormUser = ({ user }: IProps) => {
                         <DatePicker style={{ width: '100%' }} />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Country"
                         name="country"
@@ -392,7 +394,7 @@ const FormUser = ({ user }: IProps) => {
                         ></Select>
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Nationality"
                         name="nationality"
@@ -411,7 +413,7 @@ const FormUser = ({ user }: IProps) => {
                         ></Select>
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Residential Address"
                         name="address"
@@ -432,7 +434,7 @@ const FormUser = ({ user }: IProps) => {
                   </Divider>
 
                   <Row gutter={20}>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="IC Type"
                         name="ic_type"
@@ -450,7 +452,7 @@ const FormUser = ({ user }: IProps) => {
                         </Select>
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="IC Country"
                         name="ic_country"
@@ -469,7 +471,7 @@ const FormUser = ({ user }: IProps) => {
                         ></Select>
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Full name in IC"
                         name="ic_name"
@@ -483,7 +485,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item
                         label="Number NRIC / Passport"
                         name="nric"
@@ -497,7 +499,7 @@ const FormUser = ({ user }: IProps) => {
                         <Input />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item label="Status verified" name="is_verified">
                         {/* <Input readOnly /> */}
                         <Select placeholder="Select status">
@@ -510,7 +512,7 @@ const FormUser = ({ user }: IProps) => {
                     </Col>
                   </Row>
                   <Row gutter={20}>
-                    <Col span={8}>
+                    <Col xs={24} sm={24} md={8}>
                       <Form.Item
                         label="ID Card/Passport (front)"
                         name={`nric_file`}
@@ -532,7 +534,7 @@ const FormUser = ({ user }: IProps) => {
                         </Upload>
                       </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} sm={24} md={8}>
                       <Form.Item
                         label="ID Card/Passport (back)"
                         valuePropName="id_card_back"
@@ -555,7 +557,7 @@ const FormUser = ({ user }: IProps) => {
                         </Upload>
                       </Form.Item>
                     </Col>
-                    <Col span={6}>
+                    <Col xs={24} sm={24} md={8}>
                       <Form.Item
                         label="Proof of address"
                         valuePropName="proof_address"
@@ -585,12 +587,12 @@ const FormUser = ({ user }: IProps) => {
                   </Divider>
 
                   <Row gutter={20}>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item label="How you know us" name="how_you_know">
                         <Input readOnly />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Form.Item label="Status" name="status">
                         <Select placeholder="Select status" allowClear>
                           <Option value="new">New</Option>
@@ -603,7 +605,7 @@ const FormUser = ({ user }: IProps) => {
                         </Select>
                       </Form.Item>
                     </Col>
-                    {/* <Col span={12}>
+                    {/* <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item label="Reset Password Link" name="reset_password_link">
                       <Select placeholder="Select" allowClear>
                         <Option value="Reset Password">Reset Password</Option>
@@ -612,7 +614,7 @@ const FormUser = ({ user }: IProps) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={24} md={12} lg={12}>
                     <Form.Item
                       label="Reset Password Link (Web Migration, Uneditable)"
                       name="preview_link"
@@ -624,13 +626,14 @@ const FormUser = ({ user }: IProps) => {
                   <Divider orientation="left" dashed />
 
                   <Row>
-                    <Col span={12}>
+                    <Col xs={24} sm={24} md={12} lg={12}>
                       <Space>
                         <Button
                           type="primary"
                           htmlType="submit"
                           style={{ width: '185px' }}
                           loading={buttonLoading}
+                          icon={<SendOutlined />}
                         >
                           Submit
                         </Button>

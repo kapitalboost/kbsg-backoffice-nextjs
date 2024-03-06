@@ -3,6 +3,7 @@ import {
   Col,
   DatePicker,
   Form,
+  Grid,
   Input,
   InputNumber,
   message,
@@ -13,7 +14,7 @@ import {
   Space,
   Upload,
 } from 'antd'
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
+import { PlusOutlined, SendOutlined, UploadOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import type { UploadFile } from 'antd/es/upload/interface'
 import { Api } from '@/api/api'
@@ -23,6 +24,8 @@ import dayjs from 'dayjs'
 import weekday from 'dayjs/plugin/weekday'
 import localeData from 'dayjs/plugin/localeData'
 import timezone from 'dayjs/plugin/timezone'
+
+const { useBreakpoint } = Grid
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -53,6 +56,7 @@ const FormEditWithdrawal = ({
   const [userBankOptions, setUserBankOptions] = useState<any>(null)
   const [onLoadBank, setOnLoadBank] = useState(false)
   const [submitLoading, setSubmitLoading] = useState(false)
+  const screens = useBreakpoint()
 
   useEffect(() => {
     if (!isShow) {
@@ -213,9 +217,23 @@ const FormEditWithdrawal = ({
             </Upload>
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+          <Form.Item
+            wrapperCol={{
+              offset: screens.md ? 6 : 0,
+              xs: 24,
+              sm: 24,
+              md: 18,
+              lg: 18,
+            }}
+          >
             <Space>
-              <Button type="primary" htmlType="submit" loading={submitLoading}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={submitLoading}
+                icon={<SendOutlined />}
+                style={{ width: '150px' }}
+              >
                 Submit
               </Button>
               <Button
