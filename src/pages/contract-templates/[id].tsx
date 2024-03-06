@@ -13,6 +13,7 @@ import {
   Card,
   Col,
   Divider,
+  Grid,
   Input,
   List,
   message,
@@ -35,6 +36,8 @@ import ContractEditorForm from './components/mainEditor'
 import ContractEditorSignForm from './components/signEditor'
 import Link from 'next/link'
 
+const { useBreakpoint } = Grid
+
 interface IProps {
   user: any
 }
@@ -52,6 +55,8 @@ const ContractTemplateEdit = ({ user }: IProps) => {
   const [isModalPassword, setIsModalPassword] = useState(false)
   const [isPasswordFalse, setIsPasswordFalse] = useState(false)
   const [adminPassword, setAdminPassword] = useState('')
+
+  const screens = useBreakpoint()
 
   const param_id = router.query.id
 
@@ -172,7 +177,7 @@ const ContractTemplateEdit = ({ user }: IProps) => {
             <Tabs
               defaultActiveKey="1"
               style={{ marginBottom: 32 }}
-              tabPosition={'right'}
+              tabPosition={screens.xl ? 'right' : 'top'}
               onChange={onTachChange}
               items={[
                 {

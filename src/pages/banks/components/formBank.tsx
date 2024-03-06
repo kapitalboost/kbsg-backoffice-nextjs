@@ -1,7 +1,9 @@
 import { Api } from '@/api/api'
+import { SendOutlined } from '@ant-design/icons'
 import {
   Button,
   Form,
+  Grid,
   Input,
   message,
   Modal,
@@ -12,6 +14,8 @@ import {
 } from 'antd'
 
 import { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 interface Props {
   isShow: boolean
@@ -34,6 +38,7 @@ const FormBank = ({
   const [data, setData] = useState({})
   const [loadingSubmit, setLoadingSubmit] = useState(false)
   const [countryOptions, setCountryOptions] = useState<any>(null)
+  const screens = useBreakpoint()
 
   const countryOption = async () => {
     await Api.get(`countries-option`, token)
@@ -149,9 +154,23 @@ const FormBank = ({
           <Switch />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+        <Form.Item
+          wrapperCol={{
+            offset: screens.md ? 6 : 0,
+            xs: 24,
+            sm: 24,
+            md: 18,
+            lg: 18,
+          }}
+        >
           <Space>
-            <Button type="primary" htmlType="submit" loading={loadingSubmit}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loadingSubmit}
+              icon={<SendOutlined />}
+              style={{ width: '150px' }}
+            >
               Submit
             </Button>
             <Button onClick={() => form.resetFields()}>Reset</Button>

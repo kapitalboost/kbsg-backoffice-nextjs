@@ -318,6 +318,7 @@ const Banks = ({ user }: IProps) => {
           columns={columns}
           className={'mt-1'}
           loading={loading}
+          scroll={{ x: 800 }}
         />
 
         <FormBank

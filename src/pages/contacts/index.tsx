@@ -10,6 +10,7 @@ import {
   Breadcrumb,
   Button,
   Card,
+  Grid,
   Input,
   message,
   Modal,
@@ -25,6 +26,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { InputRef } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
+const { useBreakpoint } = Grid
 
 interface DataType {
   key: string
@@ -50,6 +52,7 @@ const Contacts = ({ user }: IProps) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
+  const screens = useBreakpoint()
 
   const init = () => {
     setLoading(true)
@@ -249,16 +252,19 @@ const Contacts = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <h3 className="m-0 fw-300">List of Contacts</h3>
-        </Space>
-
+      <Card
+        bodyStyle={!screens.lg ? { padding: '0' } : {}}
+        title={
+          <Typography.Title level={5} className="m-0">
+            List of Contacts
+          </Typography.Title>
+        }
+      >
         <Table
           dataSource={contacts}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
+          scroll={{ x: 800 }}
         />
 
         <Modal
