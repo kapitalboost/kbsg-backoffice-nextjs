@@ -27,6 +27,7 @@ import {
 } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+import type { ColumnType, ColumnsType } from 'antd/es/table'
 
 const { Text, Link } = Typography
 const { useBreakpoint } = Grid
@@ -34,6 +35,13 @@ const { useBreakpoint } = Grid
 interface iProps {
   user: any
   slug: any
+}
+
+interface DataType {
+  key: string
+  type: number
+  is_generated: boolean
+  sent: boolean
 }
 
 const BE_URL = process.env.NEXT_PUBLIC_BE_URL
@@ -164,7 +172,7 @@ const UkmContract = ({ user, slug }: iProps) => {
     })
   }
 
-  const columns = [
+  const columns: ColumnsType<DataType> = [
     {
       title: 'Name',
       dataIndex: 'type',
