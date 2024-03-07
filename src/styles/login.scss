@@ -1,21 +1,6 @@
 [data-page='login'] {
   width: 100vw;
   margin: auto;
-  background-image: linear-gradient(
-    to right top,
-    #c9f6cb,
-    #bbf6d3,
-    #aff5dd,
-    #a6f3e6,
-    #9ff1ef,
-    #9fecf8,
-    #a4e7fd,
-    #aee1ff,
-    #c6d6ff,
-    #e3caf5,
-    #f9c0db,
-    #ffbcbc
-  );
 
   .login-form {
     display: block;
@@ -43,6 +28,21 @@
     width: 100vw;
     min-height: 100vh;
     margin-bottom: 0;
+    background-image: linear-gradient(
+      to right top,
+      #c9f6cb,
+      #bbf6d3,
+      #aff5dd,
+      #a6f3e6,
+      #9ff1ef,
+      #9fecf8,
+      #a4e7fd,
+      #aee1ff,
+      #c6d6ff,
+      #e3caf5,
+      #f9c0db,
+      #ffbcbc
+    );
 
     .login-form {
       margin-top: 35px;

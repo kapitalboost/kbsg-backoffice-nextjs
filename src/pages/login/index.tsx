@@ -9,6 +9,7 @@ import {
   Alert,
   notification,
   Grid,
+  Typography,
 } from 'antd'
 import { useEffect, useState } from 'react'
 import Head from 'next/head'
@@ -85,81 +86,92 @@ const Login = ({ without_layout }: Props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main data-page="login">
-        <Row
-          align={isMobile(screens) ? 'middle' : 'middle'}
-          style={{ height: isMobile(screens) || screens.sm ? 'auto' : '100vh' }}
+        <section
+          style={{ width: screens.md ? '85vw' : '100vw', margin: 'auto' }}
         >
-          <Col sm={24} md={24} lg={14} xl={14} className="text-center">
-            {isMobile(screens) || screens.sm ? (
-              <img
-                className="text-center"
-                src={
-                  'https://res.cloudinary.com/kbas/image/upload/v1562814565/logo/LOGO-17_djoes1.png'
-                }
-                alt="Illustration"
-                width={'75%'}
-                style={{
-                  margin: 'auto',
-                  marginBottom: '15px',
-                  padding: '100px 0 10px',
-                }}
-              />
-            ) : (
-              <img
-                className="illus hide-on-mobile"
-                src={
-                  'https://res.cloudinary.com/kbas/image/upload/v1677120908/Illustration/illustration_opbic0.svg'
-                }
-                alt="Illustration"
-                width={'60%'}
-                style={{
-                  margin: 'auto',
-                }}
-              />
-            )}
-          </Col>
+          <Row
+            align={screens.xs || (screens.sm && !screens.md) ? 'top' : 'middle'}
+            style={{ height: screens.md ? '100vh' : 'auto' }}
+          >
+            <Col sm={24} md={24} lg={16} xl={16} className="text-center">
+              {screens.md ? (
+                <img
+                  className="illus hide-on-mobile"
+                  src={
+                    'https://res.cloudinary.com/kbas/image/upload/v1677120908/Illustration/illustration_opbic0.svg'
+                  }
+                  alt="Illustration"
+                  width={'60%'}
+                  style={{
+                    margin: 'auto',
+                  }}
+                />
+              ) : (
+                <img
+                  className="text-center"
+                  src={
+                    'https://res.cloudinary.com/kbas/image/upload/v1562814565/logo/LOGO-17_djoes1.png'
+                  }
+                  alt="Illustration"
+                  width={'75%'}
+                  style={{
+                    margin: 'auto',
+                    marginBottom: '15px',
+                    padding: '100px 0 10px',
+                  }}
+                />
+              )}
+            </Col>
 
-          <Col sm={24} md={24} lg={10} xl={10} className="login-form">
-            <Space direction="vertical">
-              <h1 className={`m-0 text-center-on-mobile`}>Sign In</h1>
-
-              <p
-                className={`m-0 text-center-on-mobile`}
-                style={{ fontSize: '1.2rem' }}
-              >{`Assalamu'alaikum KB's Team`}</p>
-
-              <Form
-                name="basic"
-                style={{ marginTop: 25 }}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                layout="vertical"
-              >
-                {error !== '' && <Alert message={error} type="error" />}
-                <br />
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    { required: true, message: 'Please input your email!' },
-                  ]}
+            <Col sm={24} md={24} lg={8} xl={8} className="login-form">
+              <Space direction="vertical">
+                <Typography.Title
+                  level={1}
+                  className={`m-0 text-center-on-mobile`}
                 >
-                  <Input size="large" />
-                </Form.Item>
+                  Sign In
+                </Typography.Title>
 
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
-                    { required: true, message: 'Please input your password!' },
-                  ]}
+                <p
+                  className={`m-0 text-center-on-mobile`}
+                  style={{ fontSize: '1.2rem' }}
+                >{`Assalamu'alaikum KB's Team`}</p>
+
+                <Form
+                  name="basic"
+                  style={{ marginTop: 25 }}
+                  initialValues={{ remember: true }}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+                  autoComplete="off"
+                  layout="vertical"
                 >
-                  <Input.Password size="large" />
-                </Form.Item>
+                  {error !== '' && <Alert message={error} type="error" />}
+                  <br />
+                  <Form.Item
+                    label="Email"
+                    name="email"
+                    rules={[
+                      { required: true, message: 'Please input your email!' },
+                    ]}
+                  >
+                    <Input size="large" />
+                  </Form.Item>
 
-                {/* <Form.Item>
+                  <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your password!',
+                      },
+                    ]}
+                  >
+                    <Input.Password size="large" />
+                  </Form.Item>
+
+                  {/* <Form.Item>
                   <Button
                     type="link"
                     onClick={() => setIsModalOpen(!isModalOpen)}
@@ -169,27 +181,28 @@ const Login = ({ without_layout }: Props) => {
                   </Button>
                 </Form.Item> */}
 
-                <Form.Item>
-                  <Space>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      loading={loading}
-                      icon={<LoginOutlined />}
-                      style={{ width: '175px' }}
-                    >
-                      Login
-                    </Button>
+                  <Form.Item>
+                    <Space>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loading}
+                        icon={<LoginOutlined />}
+                        style={{ width: '175px' }}
+                      >
+                        Login
+                      </Button>
 
-                    <Button htmlType="reset" icon={<ReloadOutlined />}>
-                      Reset
-                    </Button>
-                  </Space>
-                </Form.Item>
-              </Form>
-            </Space>
-          </Col>
-        </Row>
+                      <Button htmlType="reset" icon={<ReloadOutlined />}>
+                        Reset
+                      </Button>
+                    </Space>
+                  </Form.Item>
+                </Form>
+              </Space>
+            </Col>
+          </Row>
+        </section>
 
         {/* <Modal
           title="Forgot Password"
