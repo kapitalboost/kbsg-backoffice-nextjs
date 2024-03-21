@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Api } from '@/api/api'
 import { getSession } from 'next-auth/react'
-import { Breadcrumb, Card, message, Tabs } from 'antd'
+import { Breadcrumb, Card, Grid, message, Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import DetailInvestment from './components/DetailInvestment'
 import InvestmentPayouts from './components/InvestmentPayouts'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   user: any
@@ -18,6 +20,8 @@ const Detail = ({ user }: IProps) => {
   const [dataInvestment, setDataInvestment] = useState<any>(null)
 
   const id = router.query.id
+
+  const screens = useBreakpoint()
 
   const init = () => {
     setLoading(true)
@@ -48,7 +52,7 @@ const Detail = ({ user }: IProps) => {
 
       <Card>
         <Tabs
-          tabPosition={'right'}
+          tabPosition={screens.xl ? 'right' : 'top'}
           items={[
             {
               label: `Detail`,

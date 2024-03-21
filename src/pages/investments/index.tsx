@@ -12,6 +12,7 @@ import {
   Button,
   Card,
   Col,
+  Grid,
   Input,
   message,
   Modal,
@@ -31,6 +32,8 @@ import type { InputRef } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import Link from 'next/link'
+
+const { useBreakpoint } = Grid
 
 interface DataType {
   key: string
@@ -67,6 +70,8 @@ const Investments = ({ user }: IProps) => {
     amount: '',
     status: '',
   })
+
+  const screens = useBreakpoint()
 
   const payMethod = (key: string) => {
     switch (key) {
@@ -472,7 +477,7 @@ const Investments = ({ user }: IProps) => {
               columns={columns}
               className={'mt-1'}
               loading={loading}
-              scroll={{ x: 800 }}
+              scroll={{ x: 1300 }}
             />
           </Col>
         </Row>

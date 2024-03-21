@@ -10,6 +10,7 @@ import {
   Col,
   Divider,
   Form,
+  Grid,
   Input,
   message,
   notification,
@@ -20,6 +21,8 @@ import {
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
+const { useBreakpoint } = Grid
+
 interface IProps {
   investment: any
   token: string
@@ -29,6 +32,8 @@ interface IProps {
 const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
   const [submitLoading, setSubmitLoading] = useState(false)
   const [form] = Form.useForm()
+
+  const screens = useBreakpoint()
 
   useEffect(() => {
     if (!investment) {
@@ -67,7 +72,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
       <br />
       <Form layout={'vertical'}>
         <Row gutter={15}>
-          <Col span={12}>
+          <Col xs={24} sm={24} md={12} lg={12}>
             <Form.Item label="Investor Full Name">
               <Input value={investment?.user_name} readOnly />
             </Form.Item>
@@ -81,7 +86,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
               <Input value={investment?.created_at} readOnly />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col xs={24} sm={24} md={12} lg={12}>
             <Form.Item label="Campaign Name">
               <Input value={investment?.campaign_name} readOnly />
             </Form.Item>
@@ -103,7 +108,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
       </Divider>
 
       <Row gutter={25} justify="center" align={'middle'}>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12} lg={12}>
           <Form
             form={form}
             autoComplete={'off'}
@@ -162,7 +167,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
             </Form.Item>
           </Form>
         </Col>
-        <Col span={12}>
+        <Col xs={24} sm={24} md={12} lg={12}>
           {investment?.bank_proof ? (
             <div className="text-center">
               <Link target={`_blank`} href={investment?.bank_proof}>

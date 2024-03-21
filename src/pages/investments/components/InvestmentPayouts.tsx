@@ -1,8 +1,19 @@
 import { Api } from '@/api/api'
 import { currency } from '@/utils/helpers'
-import { Button, message, Select, Space, Table, Tag, Typography } from 'antd'
+import {
+  Button,
+  Grid,
+  message,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Typography,
+} from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
+
+const { useBreakpoint } = Grid
 
 interface IProps {
   investment: any
@@ -12,6 +23,8 @@ interface IProps {
 const InvestmentPayouts = ({ investment, token }: IProps) => {
   const [payouts, setPayouts] = useState<any>(null)
   const [loading, setLoading] = useState(false)
+
+  const screens = useBreakpoint()
 
   const init = () => {
     setLoading(true)
@@ -83,7 +96,12 @@ const InvestmentPayouts = ({ investment, token }: IProps) => {
         Payout Schedule
       </Typography.Title>
 
-      <Table dataSource={payouts} columns={columns} loading={loading} />
+      <Table
+        dataSource={payouts}
+        columns={columns}
+        loading={loading}
+        scroll={{ x: 600 }}
+      />
     </>
   )
 }

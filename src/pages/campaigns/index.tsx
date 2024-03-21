@@ -561,7 +561,7 @@ const Index = ({ user }: IProps) => {
               ),
               rowExpandable: (record) => record.id !== 'Not Expandable',
             }}
-            scroll={{ x: 800 }}
+            scroll={{ x: 1450 }}
             pagination={{
               total: campaigns?.total,
               current: campaigns?.current_page,
