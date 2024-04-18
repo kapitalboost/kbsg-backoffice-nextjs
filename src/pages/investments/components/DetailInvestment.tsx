@@ -104,7 +104,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
       </Form>
 
       <Divider plain>
-        <b>Payment Detail of Dummy Campaign</b>
+        <b>Payment Detail</b>
       </Divider>
 
       <Row gutter={25} justify="center" align={'middle'}>

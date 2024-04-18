@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
+  PlusOutlined,
   SearchOutlined,
 } from '@ant-design/icons'
 import {
@@ -32,6 +33,7 @@ import type { InputRef } from 'antd'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import Link from 'next/link'
+import CreateInvestmentModal from './components/CreateInvestmentModal'
 
 const { useBreakpoint } = Grid
 
@@ -57,6 +59,7 @@ interface IProps {
 const Investments = ({ user }: IProps) => {
   const [modal, contextHolder] = Modal.useModal()
   const [loading, setLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [investments, setInvestments] = useState<any>(null)
   const [campaignOptions, setCampaignOptions] = useState<any>(null)
   const [userOptions, setUserOptions] = useState<any>(null)
@@ -462,15 +465,20 @@ const Investments = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
+      <Card
+        title={'List of Investment'}
+        extra={
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => setIsModalOpen(true)}
+            size="small"
+          >
+            Add investment
+          </Button>
+        }
+      >
         <Row>
           <Col span={24}>
-            <Space className="space-between mb-1">
-              <h3 className="m-0 fw-300">
-                <strong>List of Investment</strong>
-              </h3>
-            </Space>
-
             <Table
               rowKey={'id'}
               dataSource={investments}
@@ -484,6 +492,12 @@ const Investments = ({ user }: IProps) => {
       </Card>
 
       {contextHolder}
+
+      <CreateInvestmentModal
+        user={user}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+      />
     </>
   )
 }

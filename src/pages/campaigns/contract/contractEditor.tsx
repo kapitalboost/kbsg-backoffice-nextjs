@@ -394,16 +394,7 @@ const ContractEditor = ({ user, slug }: IProps) => {
 
   return (
     <>
-      {screens.xs || screens.sm ? (
-        <div className="text-center">
-          <CloseCircleOutlined
-            style={{ fontSize: '6rem', color: 'red', paddingTop: '35px' }}
-          />
-          <Typography.Title level={4}>
-            You cannot edit the contract on a mobile device
-          </Typography.Title>
-        </div>
-      ) : (
+      {screens.lg ? (
         <>
           {!loading && (
             <>
@@ -505,6 +496,15 @@ const ContractEditor = ({ user, slug }: IProps) => {
             </>
           )}
         </>
+      ) : (
+        <div className="text-center">
+          <CloseCircleOutlined
+            style={{ fontSize: '6rem', color: 'red', paddingTop: '35px' }}
+          />
+          <Typography.Title level={4}>
+            You cannot edit the contract on a mobile device
+          </Typography.Title>
+        </div>
       )}
 
       <Modal

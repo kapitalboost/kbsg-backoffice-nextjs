@@ -108,7 +108,7 @@ const CampaignContract = ({ user }: IProps) => {
 
       <Card
         title={<>Campaign Contract {campaign ? `- ${campaign.name}` : ''}</>}
-        bodyStyle={screens.xs || screens.sm ? { padding: '0' } : {}}
+        bodyStyle={screens.lg ? {} : { padding: '0' }}
       >
         {loading ? (
           <div className="text-center my-5">
