@@ -11,6 +11,7 @@ import {
   Row,
   Select,
   Space,
+  notification,
 } from 'antd'
 import { useEffect, useState } from 'react'
 
@@ -73,10 +74,26 @@ const CreateInvestmentModal = ({
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    form.resetFields()
   }
 
   const onSubmit = (values: any) => {
-    console.log(values)
+    setSubmitLoading(true)
+    // console.log(values)
+
+    Api.post(`investments`, user.token, user.id, values)
+      .then((res: any) => {
+        notification.success({ message: res.message })
+
+        setTimeout(() => {
+          setIsModalOpen(false, true)
+          form.resetFields()
+        }, 500)
+      })
+      .catch((err: any) => {
+        notification.error({ message: err.data.message })
+      })
+      .finally(() => setSubmitLoading(false))
   }
 
   return (
