@@ -20,6 +20,7 @@ interface iProps {
   isModalOpen: boolean
   setIsModalOpen: any
 }
+
 const CreateInvestmentModal = ({
   user,
   isModalOpen,
@@ -29,8 +30,8 @@ const CreateInvestmentModal = ({
   const [submitLoading, setSubmitLoading] = useState(false)
   const [campaignOptions, setCampaignOptions] = useState([])
   const [userOptions, setUserOptions] = useState([])
-  const [bankOptions, setBankOptions] = useState([])
-  const [bankType, setBankType] = useState(null)
+  // const [bankOptions, setBankOptions] = useState([])
+  // const [bankType, setBankType] = useState(null)
 
   const loadCampaignOptions = () => {
     Api.get(`campaign/options`, user.token)
@@ -56,17 +57,17 @@ const CreateInvestmentModal = ({
     return false
   }
 
-  const loadBankOptions = () => {
-    const user_id = form.getFieldValue('user_id')
+  // const loadBankOptions = () => {
+  //   const user_id = form.getFieldValue('user_id')
 
-    Api.get(`users/${user_id}/banks/option`, user.token)
-      .then((res: any) => {
-        setBankOptions(res.data)
-      })
-      .catch((err: any) => {
-        console.log(err)
-      })
-  }
+  //   Api.get(`users/${user_id}/banks/option`, user.token)
+  //     .then((res: any) => {
+  //       setBankOptions(res.data)
+  //     })
+  //     .catch((err: any) => {
+  //       console.log(err)
+  //     })
+  // }
 
   useEffect(() => {
     loadCampaignOptions()
@@ -79,7 +80,6 @@ const CreateInvestmentModal = ({
 
   const onSubmit = (values: any) => {
     setSubmitLoading(true)
-    // console.log(values)
 
     Api.post(`investments`, user.token, user.id, values)
       .then((res: any) => {
@@ -157,9 +157,9 @@ const CreateInvestmentModal = ({
               <Form.Item name={`payment_method`} label="Payment Type">
                 <Select
                   placeholder="Please select type"
-                  onChange={(val) => {
-                    setBankType(val)
-                  }}
+                  // onChange={(val) => {
+                  //   setBankType(val)
+                  // }}
                 >
                   <Select.Option value="bank-transfer">
                     Bank Transfer
@@ -174,7 +174,7 @@ const CreateInvestmentModal = ({
                 </Select>
               </Form.Item>
 
-              <Form.Item name={`bank`} label="Bank Name">
+              {/* <Form.Item name={`bank`} label="Bank Name">
                 <Select
                   showSearch
                   filterOption={(input, option: any) =>
@@ -194,7 +194,7 @@ const CreateInvestmentModal = ({
 
               <Form.Item name={`bank_number`} label="Account Number">
                 <Input placeholder="Account number" disabled />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item name={`is_paid`} label="Status Payment">
                 <Select placeholder="Please select status payment">
