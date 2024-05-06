@@ -115,6 +115,14 @@ const Investments = ({ user }: IProps) => {
     init()
   }, [filter])
 
+  const handlePopupClose = (value: any, reload: any) => {
+    setIsModalOpen(value)
+
+    if (reload === true) {
+      init()
+    }
+  }
+
   // component search
   const handleSearch = (
     selectedKeys: string[],
@@ -496,7 +504,7 @@ const Investments = ({ user }: IProps) => {
       <CreateInvestmentModal
         user={user}
         isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
+        setIsModalOpen={handlePopupClose}
       />
     </>
   )

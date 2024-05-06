@@ -68,6 +68,9 @@ export const menuItems: MenuItem[] = [
       'contract-templates'
     ),
     getItem(<Link href="/contacts">Contact Form</Link>, 'contact-form'),
-    // getItem(<Link href="/faqs">FAQs</Link>, 'faqs'),
+    getItem(
+      <Link href="/mobile-notification">Mobile Notification</Link>,
+      'mobile-notification'
+    ),
   ]),
 ]
