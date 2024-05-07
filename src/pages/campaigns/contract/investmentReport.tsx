@@ -28,6 +28,8 @@ import {
   Typography,
 } from 'antd'
 import moment from 'moment'
+import { GetServerSidePropsContext } from 'next'
+import { getSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 const { Text, Link } = Typography
@@ -360,3 +362,22 @@ const InvestmentReport = ({ user, slug }: Iprops) => {
 }
 
 export default InvestmentReport
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
+  const session: any = await getSession(context)
+  const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
+
+  return {
+    props: {
+      user: user,
+      menuKey,
+    },
+  }
+}

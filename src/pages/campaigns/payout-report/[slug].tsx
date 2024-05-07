@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 import * as FileSaver from 'file-saver'
 import * as XLSX from 'xlsx'
 import Link from 'next/link'
+import { GetServerSidePropsContext } from 'next'
 
 interface DataType {
   key: React.Key
@@ -263,13 +264,21 @@ const InvestmentReport = ({ user }: IProps) => {
 
 export default InvestmentReport
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

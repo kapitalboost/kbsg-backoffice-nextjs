@@ -3,12 +3,16 @@ import { SessionProvider } from 'next-auth/react'
 import { Button, Grid, Layout, Menu, Space, theme } from 'antd'
 import HeaderLayout from './header'
 import Head from 'next/head'
-import { menuItems } from './menuItems'
+import { menuItemsLayout } from '@/utils/menuItems'
+import type { MenuProps } from 'antd'
 import {
   CloseOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons'
+import Link from 'next/link'
+
+type MenuItem = Required<MenuProps>['items'][number]
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -19,6 +23,21 @@ type LayoutProps = {
   session: any
   themeMode: any
   onChangeMode: any
+  menuKey?: any[]
+}
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[]
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem
 }
 
 const KbLayout = ({
@@ -26,12 +45,36 @@ const KbLayout = ({
   session,
   themeMode,
   onChangeMode,
+  menuKey,
 }: LayoutProps) => {
-  const [collapsed, setCollapsed] = useState<any>(true)
+  const screens = useBreakpoint()
+  const [collapsed, setCollapsed] = useState<any>(screens.xs)
   const {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
-  const screens = useBreakpoint()
+
+  // get menu item by user role
+  const menuItems2 = menuItemsLayout.map((item: any) => {
+    let childrens: any[] = []
+    if (item.children !== false) {
+      item.children.map((childItem: any) =>
+        childrens.push(
+          getItem(
+            <Link href={childItem.path}>{childItem.title}</Link>,
+            childItem.key
+          )
+        )
+      )
+    }
+    return getItem(
+      item.children ? item.title : <Link href={item.path}>{item.title}</Link>,
+      item.key,
+      item.icon,
+      item.children === false ? undefined : childrens
+    )
+  })
+
+  const menuItems: MenuItem[] = menuItems2
 
   return (
     <>
@@ -100,7 +143,7 @@ const KbLayout = ({
             </div>
             <Menu
               theme={themeMode ? 'dark' : 'light'}
-              defaultSelectedKeys={['1']}
+              defaultSelectedKeys={menuKey ? menuKey : []}
               mode="inline"
               items={menuItems}
             />

@@ -47,6 +47,7 @@ import TeamInspector from '../components/teamInspector'
 import Link from 'next/link'
 
 import type { MenuProps } from 'antd'
+import { GetServerSidePropsContext } from 'next'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -867,13 +868,21 @@ const NewCampaign = ({ user }: IProps) => {
 
 export default NewCampaign
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

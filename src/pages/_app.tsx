@@ -57,6 +57,7 @@ export default function App({
           session={session}
           themeMode={isDarkMode}
           onChangeMode={handleChangeMode}
+          menuKey={pageProps.menuKey ? pageProps.menuKey : null}
         >
           <Component {...pageProps} />
         </KbLayout>
