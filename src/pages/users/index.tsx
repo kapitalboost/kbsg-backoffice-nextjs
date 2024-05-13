@@ -34,6 +34,7 @@ import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { setColorStatus } from '@/utils/userStatus'
 import dayjs from 'dayjs'
 import { currency } from '@/utils/helpers'
+import { GetServerSidePropsContext } from 'next'
 
 const { RangePicker } = DatePicker
 
@@ -424,13 +425,21 @@ const Users = ({ user }: IProps) => {
 
 export default Users
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

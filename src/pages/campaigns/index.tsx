@@ -43,6 +43,7 @@ import NewCampaignPopup from './components/NewCampaign'
 import type { ColumnType, ColumnsType } from 'antd/es/table'
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import type { InputRef } from 'antd'
+import { GetServerSidePropsContext } from 'next'
 
 const { Search } = Input
 const { Text } = Typography
@@ -595,13 +596,22 @@ const Index = ({ user }: IProps) => {
 
 export default Index
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
+
+  let menuKey: any[] = []
+
   const user = session?.user
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

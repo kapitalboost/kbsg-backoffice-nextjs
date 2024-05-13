@@ -25,6 +25,7 @@ import { DownOutlined, LoadingOutlined } from '@ant-design/icons'
 import UkmContract from './UkmContract'
 import Link from 'next/link'
 import type { MenuProps } from 'antd'
+import { GetServerSidePropsContext } from 'next'
 
 const { useBreakpoint } = Grid
 
@@ -164,13 +165,21 @@ const CampaignContract = ({ user }: IProps) => {
 
 export default CampaignContract
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

@@ -35,6 +35,7 @@ import { useRouter } from 'next/router'
 import { currency } from '@/utils/helpers'
 import type { MenuProps } from 'antd'
 import Link from 'next/link'
+import { GetServerSidePropsContext } from 'next'
 
 const { useBreakpoint } = Grid
 
@@ -466,13 +467,21 @@ const UserTransaction = ({ user }: IProps) => {
 
 export default UserTransaction
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

@@ -28,6 +28,7 @@ import * as XLSX from 'xlsx'
 
 import type { MenuProps } from 'antd'
 import Link from 'next/link'
+import { GetServerSidePropsContext } from 'next'
 
 const dataSource = [
   {
@@ -260,13 +261,21 @@ const InvestmentReport = ({ user }: IProps) => {
 
 export default InvestmentReport
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }

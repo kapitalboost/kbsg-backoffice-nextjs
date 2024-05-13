@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import type { MenuProps } from 'antd'
+import { GetServerSidePropsContext } from 'next'
 
 const { Search } = Input
 
@@ -192,13 +193,21 @@ const Banks = ({ user }: IProps) => {
 
 export default Banks
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }
