@@ -37,6 +37,7 @@ import localeData from 'dayjs/plugin/localeData'
 import dayjs from 'dayjs'
 import type { UploadFile } from 'antd/es/upload/interface'
 import type { UploadProps } from 'antd'
+import { GetServerSidePropsContext } from 'next'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -653,13 +654,21 @@ const FormUser = ({ user }: IProps) => {
 
 export default FormUser
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { resolvedUrl } = context
   const session: any = await getSession(context)
   const user = session?.user
+
+  let menuKey: any[] = []
+  const path = resolvedUrl?.split('/')
+  if (path) {
+    menuKey.push(path[1])
+  }
 
   return {
     props: {
       user: user,
+      menuKey,
     },
   }
 }
