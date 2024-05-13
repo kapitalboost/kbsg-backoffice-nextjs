@@ -61,8 +61,8 @@ export const menuItemsLayout = [
     children: [
       {
         title: 'Partners',
-        key: 'partnets',
-        path: `/partnets`,
+        key: 'list',
+        path: `/partners/list`,
       },
       {
         title: 'Affiliations',
