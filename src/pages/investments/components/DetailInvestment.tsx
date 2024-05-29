@@ -70,7 +70,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
         Investment Detail of {investment?.campaign_name}
       </Typography.Title>
       <br />
-      <Form layout={'vertical'}>
+      <Form layout={'vertical'} size="large">
         <Row gutter={15}>
           <Col xs={24} sm={24} md={12} lg={12}>
             <Form.Item label="Investor Full Name">
@@ -114,6 +114,7 @@ const DetailInvestment = ({ investment, token, reloadData }: IProps) => {
             autoComplete={'off'}
             onFinish={onSubmit}
             layout={'vertical'}
+            size="large"
           >
             <Form.Item name={`payment_method`} label="Payment Type">
               <Select placeholder="Please select type">

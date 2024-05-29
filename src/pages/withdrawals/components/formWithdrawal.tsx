@@ -121,6 +121,7 @@ const FormWithdrawal = ({ isShow, handleHide, token, reinitData }: Props) => {
         open={isShow}
         onCancel={handleHide}
         footer={false}
+        centered
       >
         <Form
           form={form}
@@ -132,6 +133,7 @@ const FormWithdrawal = ({ isShow, handleHide, token, reinitData }: Props) => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           className="mt-2"
+          size="large"
         >
           <Form.Item name="user_id" label="User" rules={[{ required: true }]}>
             <Select

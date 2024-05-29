@@ -91,6 +91,7 @@ const CampaignContractForm = ({ campaign, contract, user }: Iprops) => {
       autoComplete="off"
       layout="vertical"
       style={screens.xs || screens.sm ? { padding: '0 15px' } : {}}
+      size="large"
     >
       <Divider orientation="left" dashed>
         Automatically Generated

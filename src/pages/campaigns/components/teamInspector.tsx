@@ -79,6 +79,7 @@ const TeamInspector = ({ user, slug }: IProps) => {
       onFinishFailed={onFinishFailed}
       autoComplete="off"
       layout="vertical"
+      size="large"
     >
       {loading ? (
         <div className="text-center my-5">

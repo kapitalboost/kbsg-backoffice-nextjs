@@ -304,6 +304,7 @@ const FormUser = ({ user }: IProps) => {
                   autoComplete="off"
                   layout="vertical"
                   className="mt-2"
+                  size="large"
                 >
                   <Row gutter={20}>
                     <Col xs={24} sm={24} md={12} lg={12}>

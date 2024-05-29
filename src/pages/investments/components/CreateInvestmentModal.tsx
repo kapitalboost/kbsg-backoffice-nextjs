@@ -117,6 +117,7 @@ const CreateInvestmentModal = ({
               autoComplete={'off'}
               onFinish={onSubmit}
               layout={'vertical'}
+              size="large"
             >
               <Form.Item name={`user_id`} label="Select user">
                 <Select

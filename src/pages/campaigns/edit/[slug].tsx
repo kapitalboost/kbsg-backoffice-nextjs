@@ -28,6 +28,7 @@ import {
   Card,
   Typography,
   Grid,
+  message,
 } from 'antd'
 import CampaignGallery from '../components/galleries'
 import PdfCampaign from '../components/pdf'
@@ -48,6 +49,8 @@ import Link from 'next/link'
 
 import type { MenuProps } from 'antd'
 import { GetServerSidePropsContext } from 'next'
+import FormWriteUp from '../components/FormWriteUp'
+import FormWriteUpTwo from '../components/FormWriteUp2'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -211,6 +214,10 @@ const NewCampaign = ({ user }: IProps) => {
     }, 1000)
   }
 
+  const onFinishFailed = () => {
+    message.error('Submit failed! Please check the required field.')
+  }
+
   const FormCampaign = () => {
     return (
       <>
@@ -229,10 +236,13 @@ const NewCampaign = ({ user }: IProps) => {
             ) : (
               <Form
                 form={form}
+                scrollToFirstError
                 name="basic"
                 onFinish={onFinish}
+                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 layout="vertical"
+                size="large"
               >
                 <Divider orientation="left" dashed>
                   Company Information
@@ -837,9 +847,18 @@ const NewCampaign = ({ user }: IProps) => {
           tabPosition={screens.xl ? 'right' : 'top'}
           items={[
             {
-              label: `Campaign Form`,
+              label: `Campaign Writeup`,
               key: 'campaign-form',
-              children: <FormCampaign />,
+              children: (
+                <FormWriteUpTwo
+                  form={form}
+                  loadCampaign={loadCampaign}
+                  user={user}
+                  slug={slug}
+                  campaign={campaign}
+                  campaignOptions={campaignOptions}
+                />
+              ),
             },
             {
               label: `Galleries`,
