@@ -30,15 +30,16 @@ const PreviewCampaign = ({
   const init = () => {
     Api.get(`campaign/detail/${campaign.slug}`, user.token).then((res: any) => {
       setData(res.data)
-
-      console.log(res.data.description)
     })
   }
 
   useEffect(() => {
-    init()
-    console.log(campaign)
-  }, [])
+    if (isModalOpen) {
+      init()
+    } else {
+      setData(undefined)
+    }
+  }, [isModalOpen])
 
   const overview = [
     { title: 'Target Funding', content: currency(data?.total_invest_amount) },
@@ -97,6 +98,7 @@ const PreviewCampaign = ({
               <Card
                 title={<h3 style={{ textAlign: 'center' }}>Overview</h3>}
                 bodyStyle={{ padding: '0' }}
+                style={{ marginBottom: '30px' }}
               >
                 <List
                   size={`small`}
@@ -110,6 +112,48 @@ const PreviewCampaign = ({
                   )}
                 />
               </Card>
+
+              {data.campaign_images.length && (
+                <>
+                  <h2 className="text-center">Gallery</h2>
+                  <Row gutter={[10, 10]}>
+                    {data.campaign_images.map((image: any) => (
+                      <Col span={6}>
+                        <a
+                          href={image.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img src={image.link} width={'100%'} />
+                        </a>
+                      </Col>
+                    ))}
+                  </Row>
+                </>
+              )}
+
+              {data.campaign_pdfs.length && (
+                <div style={{ marginTop: '30px' }}>
+                  <h2 className="text-center">Documents</h2>
+                  <Row gutter={[10, 10]}>
+                    <Col span={24}>
+                      <ul>
+                        {data.campaign_pdfs.map((file: any) => (
+                          <li>
+                            <a
+                              href={file.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {file.name}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </Col>
+                  </Row>
+                </div>
+              )}
             </Col>
           </Row>
         </>
