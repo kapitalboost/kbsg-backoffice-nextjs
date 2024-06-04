@@ -78,7 +78,7 @@ const FormWriteUp = ({
   const onFinish = (values: any) => {
     setLoading(true)
 
-    Api.post(`campaign/update/${slug}`, user.token, user.id, {
+    Api.post(`campaign/update/${slug}`, user?.token, user.id, {
       ...values,
     })
       .then((res: any) => {
@@ -116,7 +116,7 @@ const FormWriteUp = ({
   const regeneratePassword = () => {
     setPasswordLoading(true)
     setTimeout(() => {
-      Api.get(`campaign/generate-password`, user.token)
+      Api.get(`campaign/generate-password`, user?.token)
         .then((res: any) => {
           console.log(res)
           form.setFieldValue('password', res.password)
@@ -505,7 +505,7 @@ const FormWriteUp = ({
             <Upload
               action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
               headers={{
-                Authorization: `Bearer ${user.token}`,
+                Authorization: `Bearer ${user?.token}`,
               }}
               listType="picture-circle"
               onChange={handleChangeLogo}
@@ -524,7 +524,7 @@ const FormWriteUp = ({
             <Upload
               action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
               headers={{
-                Authorization: `Bearer ${user.token}`,
+                Authorization: `Bearer ${user?.token}`,
               }}
               listType="picture-card"
               maxCount={1}
@@ -557,7 +557,7 @@ const FormWriteUp = ({
                 padding: '15px',
               }}
               dangerouslySetInnerHTML={{
-                __html: form.getFieldValue('description'),
+                __html: form?.getFieldValue('description'),
               }}
             ></div>
           </Form.Item>

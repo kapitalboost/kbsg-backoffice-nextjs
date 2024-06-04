@@ -62,7 +62,12 @@ const PreviewCampaign = ({
         <>
           <Row>
             <Col span={24}>
-              <img src={data.cover_image} width={`100%`} height={`450`} />
+              <img
+                src={data.cover_image}
+                width={`100%`}
+                height={`450`}
+                alt="Campaign Banner"
+              />
               <Card
                 style={{
                   position: 'absolute',
@@ -118,13 +123,17 @@ const PreviewCampaign = ({
                   <h2 className="text-center">Gallery</h2>
                   <Row gutter={[10, 10]}>
                     {data.campaign_images.map((image: any) => (
-                      <Col span={6}>
+                      <Col span={6} key={Math.random()}>
                         <a
                           href={image.link}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <img src={image.link} width={'100%'} />
+                          <img
+                            src={image.link}
+                            width={'100%'}
+                            alt={image.name}
+                          />
                         </a>
                       </Col>
                     ))}
@@ -139,7 +148,7 @@ const PreviewCampaign = ({
                     <Col span={24}>
                       <ul>
                         {data.campaign_pdfs.map((file: any) => (
-                          <li>
+                          <li key={Math.random()}>
                             <a
                               href={file.link}
                               target="_blank"
