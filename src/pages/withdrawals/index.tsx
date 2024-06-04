@@ -319,7 +319,7 @@ const Withdrawals = ({ user }: IProps) => {
       key: 'user_full_name',
       ...getColumnSearchProps('user_full_name'),
       render: (user_full_name: string, data: any) => (
-        <Link href={`users/${data?.id}/transactions`} target={`_blank`}>
+        <Link href={`users/${data?.user_id}`} target={`_blank`}>
           {user_full_name}
         </Link>
       ),
@@ -484,69 +484,6 @@ const Withdrawals = ({ user }: IProps) => {
         token={user?.token}
         reinitData={init}
       />
-
-      <Modal
-        title="Update withdrawal - Gael Ulrich ZAFIMINO"
-        open={false}
-        onCancel={handleCancel}
-        footer={false}
-      >
-        <Form
-          form={form}
-          name="basic"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-          style={{ maxWidth: 600 }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          className="mt-2"
-        >
-          <Form.Item label="Amount" name="amount" rules={[{ required: true }]}>
-            <Input readOnly />
-          </Form.Item>
-
-          <Form.Item name="status" label="Status" rules={[{ required: true }]}>
-            <Select placeholder="Select status" allowClear>
-              <Select.Option value={1}>Paid</Select.Option>
-              <Select.Option value={0}>Pending</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Proof"
-            name="proof"
-            rules={[{ required: true, message: 'Please upload the proof!' }]}
-          >
-            <Upload
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              listType="picture-card"
-              defaultFileList={[...fileList]}
-              maxCount={1}
-            >
-              {/* <Button icon={<UploadOutlined />}>Upload</Button> */}
-              <div>
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </div>
-            </Upload>
-          </Form.Item>
-
-          <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-            <Space>
-              <Button
-                type="primary"
-                htmlType="submit"
-                icon={<SendOutlined />}
-                style={{ width: '150px' }}
-              >
-                Submit
-              </Button>
-              <Button onClick={() => form.resetFields()}>Reset</Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
 
       <Modal
         open={previewOpen}
