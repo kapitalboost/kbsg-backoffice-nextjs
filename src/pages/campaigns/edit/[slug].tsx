@@ -843,43 +843,52 @@ const NewCampaign = ({ user }: IProps) => {
           Edit Campaign
         </Typography.Title>
 
-        <Tabs
-          tabPosition={screens.xl ? 'right' : 'top'}
-          items={[
-            {
-              label: `Campaign Writeup`,
-              key: 'campaign-form',
-              children: (
-                <FormWriteUpTwo
-                  form={form}
-                  loadCampaign={loadCampaign}
-                  user={user}
-                  slug={slug}
-                  campaign={campaign}
-                  campaignOptions={campaignOptions}
-                />
-              ),
-            },
-            {
-              label: `Galleries`,
-              key: 'campaign-gallery',
-              children: <CampaignGallery user={user} campaign={campaign} />,
-              disabled: campaign === null,
-            },
-            {
-              label: `PDFs`,
-              key: 'campaign-pdf',
-              children: <PdfCampaign user={user} campaign={campaign} />,
-              disabled: campaign === null,
-            },
-            {
-              label: `BD/Analyst`,
-              key: 'team-inspector',
-              children: <TeamInspector user={user} slug={slug} />,
-              disabled: campaign === null,
-            },
-          ]}
-        />
+        {loading ? (
+          <div className="text-center my-5">
+            <LoadingOutlined style={{ fontSize: '2.5rem' }} />
+            <h3>Loading..</h3>
+          </div>
+        ) : (
+          <Tabs
+            tabPosition={screens.xl ? 'right' : 'top'}
+            items={[
+              {
+                label: `Campaign Writeup`,
+                key: 'campaign-form',
+                children: (
+                  <FormWriteUpTwo
+                    form={form}
+                    loadCampaign={loadCampaign}
+                    user={user}
+                    slug={slug}
+                    campaign={campaign}
+                    campaignOptions={campaignOptions}
+                    logo={logo}
+                    cover={cover}
+                  />
+                ),
+              },
+              {
+                label: `Galleries`,
+                key: 'campaign-gallery',
+                children: <CampaignGallery user={user} campaign={campaign} />,
+                disabled: campaign === null,
+              },
+              {
+                label: `PDFs`,
+                key: 'campaign-pdf',
+                children: <PdfCampaign user={user} campaign={campaign} />,
+                disabled: campaign === null,
+              },
+              {
+                label: `BD/Analyst`,
+                key: 'team-inspector',
+                children: <TeamInspector user={user} slug={slug} />,
+                disabled: campaign === null,
+              },
+            ]}
+          />
+        )}
       </Card>
     </>
   )

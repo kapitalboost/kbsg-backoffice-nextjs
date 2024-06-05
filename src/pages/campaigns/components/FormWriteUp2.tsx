@@ -16,7 +16,7 @@ import {
   notification,
 } from 'antd'
 import { useRouter } from 'next/router'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Editor } from '@tinymce/tinymce-react'
 
 import type { UploadFile } from 'antd/es/upload/interface'
@@ -32,7 +32,12 @@ import Link from 'next/link'
 import type { MenuProps } from 'antd'
 import { GetServerSidePropsContext } from 'next'
 import dayjs from 'dayjs'
-import { PlusOutlined, ReloadOutlined, SendOutlined } from '@ant-design/icons'
+import {
+  LoadingOutlined,
+  PlusOutlined,
+  ReloadOutlined,
+  SendOutlined,
+} from '@ant-design/icons'
 
 dayjs.extend(weekday)
 dayjs.extend(localeData)
@@ -53,6 +58,8 @@ interface IProps {
   user: any
   loadCampaign: any
   campaignOptions: any
+  logo: any
+  cover: any
 }
 
 const FormWriteUpTwo = ({
@@ -62,6 +69,8 @@ const FormWriteUpTwo = ({
   campaign,
   form,
   campaignOptions,
+  logo,
+  cover,
 }: IProps) => {
   const editorRef = useRef<any>(null)
   const router = useRouter()
@@ -72,8 +81,25 @@ const FormWriteUpTwo = ({
     message: '',
   })
   const [description, setDescription] = useState('')
-  const [logo, setLogo] = useState<UploadFile[]>([])
-  const [cover, setCover] = useState<UploadFile[]>([])
+  const [countryOptions, setCountryOptions] = useState<any>(null)
+
+  const countryOption = async () => {
+    await Api.get(`countries-option`, user?.token)
+      .then((res: any) => {
+        setCountryOptions(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    countryOption()
+
+    if (campaign) {
+      setDescription(campaign.description)
+    }
+  }, [])
 
   const onFinish = (values: any) => {
     setLoading(true)
@@ -91,6 +117,7 @@ const FormWriteUpTwo = ({
       .catch((err: any) => {
         notification.error({ message: 'error' })
       })
+      .finally(() => setLoading(false))
   }
 
   const handleEditorChange = (content: any, editor: any) => {
@@ -134,552 +161,555 @@ const FormWriteUpTwo = ({
   }
 
   return (
-    <Form
-      form={form}
-      scrollToFirstError
-      name="basic"
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      layout="vertical"
-      size="large"
-    >
-      <Divider orientation="left" dashed>
-        {`Campaign Writeup`}
-      </Divider>
-      <Row gutter={[20, 0]}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Campaign Name"
-            name="name"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter campaign name!',
-              },
-            ]}
-          >
-            <Input placeholder="Enter campaign name" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Company Name"
-            name="company_name"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter company name!',
-              },
-            ]}
-          >
-            <Input placeholder="Enter company name" />
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Form.Item
-            label="Campaign Acronim"
-            name="acronim"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter campaign acronim!',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        </Col>
+    <>
+      <Form
+        form={form}
+        scrollToFirstError
+        name="basic"
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        layout="vertical"
+        size="large"
+      >
+        <Divider orientation="left" dashed>
+          {`Campaign Writeup`}
+        </Divider>
 
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Company Director"
-            name="company_director"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter the director!',
-              },
-            ]}
-          >
-            <Input placeholder="Enter the director" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label="Item to be purchased" name="classification">
-            <Input placeholder="Enter the Item" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Company Director's Email"
-            name="company_director_email"
-            rules={[
-              {
-                required: true,
-                message: "Please enter the director's email!",
-              },
-            ]}
-          >
-            <Input placeholder="Enter the director's email" />
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Form.Item
-            label="Industry"
-            name="industry"
-            rules={[{ required: true, message: 'Please enter industry!' }]}
-          >
-            <Input placeholder="Enter industry" />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Project Type"
-            name="type"
-            rules={[
-              {
-                required: true,
-                message: 'Please select project type!',
-              },
-            ]}
-          >
-            <Select placeholder="Select project type" allowClear>
-              <Option value="sme">SME Crowdfunding</Option>
-              <Option value="donation">Donation</Option>
-              <Option value="private">Private Crowdfunding</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Total Funding Amount"
-            name="total_invest_amount"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter funding amount',
-              },
-            ]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={100000}
-              formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-              }
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="SME Sub Type"
-            name="subtype"
-            rules={[{ required: true, message: 'Please select subtype!' }]}
-          >
-            <Select placeholder="Select SME subtype" allowClear>
-              <Option value="ASSET PURCHASE FINANCING">
-                ASSET PURCHASE FINANCING
-              </Option>
-              <Option value="INVOICE FINANCING">INVOICE FINANCING</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Minimum Investment Amount"
-            name="minimum_invest_amount"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter the minimum invest amount',
-              },
-            ]}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={200}
-              formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-              }
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Risk"
-            name="risk"
-            rules={[
-              {
-                required: true,
-                message: 'Please select risk of campaign!',
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select risk of campaign"
-              // onChange={onGenderChange}
-              allowClear
+        <Row gutter={[20, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Campaign Name"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter campaign name!',
+                },
+              ]}
             >
-              <Option value="N/A">N/A</Option>
-              <Option value="A">A</Option>
-              <Option value="A-">A-</Option>
-              <Option value="B+">B+</Option>
-              <Option value="B">B</Option>
-              <Option value="B-">B-</Option>
-              <Option value="C+">C+</Option>
-              <Option value="C">C</Option>
-              <Option value="C-">C-</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Form.Item
-            label="Tenor"
-            name="tenor"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter the tenor',
-              },
-            ]}
-            getValueProps={(i) => ({ value: parseFloat(i) })}
-          >
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Form.Item
-            label="Country"
-            name="country"
-            rules={[
-              {
-                required: true,
-                message: 'Please select country',
-              },
-            ]}
-          >
-            <Select placeholder="Select country" allowClear>
-              <Option value="INDONESIA">INDONESIA</Option>
-              <Option value="SINGAPORE">SINGAPORE</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={12} sm={12} md={12} lg={12}>
-          <Form.Item
-            label="Project Return"
-            name="return"
-            rules={[
-              {
-                required: true,
-                message: 'Please enter project return',
-              },
-            ]}
-            getValueProps={(i) => ({ value: parseFloat(i) })}
-          >
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={0}
-              stringMode
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label="Funded" name="funded">
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={0}
-              formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-              }
-              disabled
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label="Password">
-            <Space.Compact style={{ width: '100%' }}>
-              <Form.Item noStyle name="password">
-                <Input readOnly />
-              </Form.Item>
-              <Form.Item noStyle>
-                <Tooltip title="Regenerate password">
-                  <Button
-                    icon={<ReloadOutlined />}
-                    onClick={() => regeneratePassword()}
-                    loading={passwordLoading}
-                  />
-                </Tooltip>
-              </Form.Item>
-            </Space.Compact>
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label={`Release Date & Time`} name="release_datetime">
-            <DatePicker
-              showTime
-              format="YYYY-MM-DD HH:mm:ss"
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label="Campaign Slug" name="slug">
-            <Input />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label={`Close Date & Time`} name="expiry_datetime">
-            <DatePicker
-              showTime
-              format="YYYY-MM-DD HH:mm:ss"
-              style={{ width: '100%' }}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={[20, 0]}>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item
-            label="Status"
-            name="is_enable"
-            rules={[
-              {
-                required: true,
-                message: 'Please select campaign status!',
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select campaign status"
-              // onChange={onGenderChange}
-              allowClear
+              <Input placeholder="Enter campaign name" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Company Name"
+              name="company_name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter company name!',
+                },
+              ]}
             >
-              <Option value={true}>Online</Option>
-              <Option value={false}>Offline</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="Email Payout Reminder"
-            name="send_payout_reminder"
-            rules={[
-              {
-                required: true,
-                message: 'Please select status payout reminder!',
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select status payout reminder"
-              // onChange={onGenderChange}
-              allowClear
+              <Input placeholder="Enter company name" />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Form.Item
+              label="Campaign Acronim"
+              name="acronim"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter campaign acronim!',
+                },
+              ]}
             >
-              <Option value={true}>Active</Option>
-              <Option value={false}>Disable</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            label="Email Requirements"
-            name="requirement_reminder"
-            rules={[
-              {
-                required: true,
-                message: 'Please select status email requirement!',
-              },
-            ]}
-          >
-            <Select
-              placeholder="Select status email requirement"
-              // onChange={onGenderChange}
-              allowClear
-            >
-              <Option value={true}>Active</Option>
-              <Option value={false}>Disable</Option>
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={12} lg={12}>
-          <Form.Item label={`Snippet`} name="snippet" required>
-            <Input.TextArea rows={3} />
-          </Form.Item>
+              <Input />
+            </Form.Item>
+          </Col>
 
-          <Row>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <Form.Item label="Upload Logo" name="logo">
-                <Upload
-                  action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
-                  headers={{
-                    Authorization: `Bearer ${user?.token}`,
-                  }}
-                  listType="picture-circle"
-                  onChange={handleChangeLogo}
-                  maxCount={1}
-                  defaultFileList={logo}
-                >
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                </Upload>
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={24} md={12} lg={12}>
-              <Form.Item label="Upload Cover" name="cover_image">
-                <Upload
-                  action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
-                  headers={{
-                    Authorization: `Bearer ${user?.token}`,
-                  }}
-                  listType="picture-card"
-                  maxCount={1}
-                  onChange={handleChangeCover}
-                  defaultFileList={cover}
-                >
-                  <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                </Upload>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-
-      <Row className="mt-1 mb-1">
-        <Col span={24}>
-          <Form.Item
-            label="Description"
-            name={`description`}
-            style={{ display: loading ? 'block' : 'none' }}
-          >
-            <Input style={{ visibility: 'hidden' }} />
-            <div
-              style={{
-                height: 400,
-                overflow: 'hidden',
-                borderRadius: '10px',
-                border: '2px solid #f1f1f1',
-                padding: '15px',
-              }}
-              dangerouslySetInnerHTML={{
-                __html: form?.getFieldValue('description'),
-              }}
-            ></div>
-          </Form.Item>
-          {!loading && (
-            <Form.Item>
-              <Editor
-                apiKey={tiny_api_key}
-                onInit={(evt, editor) => (editorRef.current = editor)}
-                ref={editorRef}
-                initialValue={description}
-                onEditorChange={handleEditorChange}
-                init={{
-                  height: 500,
-                  width: '100%',
-                  plugins: [
-                    'advlist',
-                    'autolink',
-                    'lists',
-                    'link',
-                    'image',
-                    'charmap',
-                    'preview',
-                    'anchor',
-                    'searchreplace',
-                    'visualblocks',
-                    'code',
-                    'fullscreen',
-                    'insertdatetime',
-                    'media',
-                    'table',
-                    'code',
-                    'help',
-                    'wordcount',
-                  ],
-                  toolbar:
-                    'undo redo | blocks | ' +
-                    'bold italic forecolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                  content_style:
-                    'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                }}
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Company Director"
+              name="company_director"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter the director!',
+                },
+              ]}
+            >
+              <Input placeholder="Enter the director" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label="Item to be purchased" name="classification">
+              <Input placeholder="Enter the Item" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Company Director's Email"
+              name="company_director_email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter the director's email!",
+                },
+              ]}
+            >
+              <Input placeholder="Enter the director's email" />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Form.Item
+              label="Industry"
+              name="industry"
+              rules={[{ required: true, message: 'Please enter industry!' }]}
+            >
+              <Input placeholder="Enter industry" />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Project Type"
+              name="type"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select project type!',
+                },
+              ]}
+            >
+              <Select placeholder="Select project type" allowClear>
+                <Option value="sme">SME Crowdfunding</Option>
+                <Option value="donation">Donation</Option>
+                <Option value="private">Private Crowdfunding</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Total Funding Amount"
+              name="total_invest_amount"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter funding amount',
+                },
+              ]}
+            >
+              <InputNumber
+                style={{ width: '100%' }}
+                defaultValue={100000}
+                formatter={(value) =>
+                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                }
               />
             </Form.Item>
-          )}
-        </Col>
-      </Row>
-
-      <Divider orientation="left" dashed>
-        Related Campaigns
-      </Divider>
-
-      <Row className="mt-1" gutter={20}>
-        <Col xs={24} sm={24} md={8} lg={8}>
-          <Form.Item label="Campaign 1" name="related_campaign_id_1">
-            <Select
-              showSearch
-              filterOption={(input, option: any) =>
-                (option?.label.toLowerCase() ?? '').includes(input)
-              }
-              placeholder="Select campaign"
-              // onChange={onGenderChange}
-              allowClear
-              options={campaignOptions}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={8} lg={8}>
-          <Form.Item label="Campaign 2" name="related_campaign_id_2">
-            <Select
-              showSearch
-              filterOption={(input, option: any) =>
-                (option?.label.toLowerCase() ?? '').includes(input)
-              }
-              placeholder="Select campaign"
-              // onChange={onGenderChange}
-              allowClear
-              options={campaignOptions}
-            />
-          </Form.Item>
-        </Col>
-        <Col xs={24} sm={24} md={8} lg={8}>
-          <Form.Item label="Campaign 3" name="related_campaign_id_3">
-            <Select
-              showSearch
-              filterOption={(input, option: any) =>
-                (option?.label.toLowerCase() ?? '').includes(input)
-              }
-              placeholder="Select campaign"
-              // onChange={onGenderChange}
-              allowClear
-              options={campaignOptions}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-
-      <Divider orientation="left" dashed></Divider>
-
-      <Row>
-        <Col span={12}>
-          <Space>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ width: '185px' }}
-              loading={loading}
-              icon={<SendOutlined />}
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label="SME Sub Type" name="subtype">
+              <Select placeholder="Select SME subtype" allowClear>
+                <Option value="ASSET PURCHASE FINANCING">
+                  ASSET PURCHASE FINANCING
+                </Option>
+                <Option value="INVOICE FINANCING">INVOICE FINANCING</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Minimum Investment Amount"
+              name="minimum_invest_amount"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter the minimum invest amount',
+                },
+              ]}
             >
-              Submit
-            </Button>
-            <Button onClick={() => loadCampaign(slug)}>Reset</Button>
-          </Space>
-        </Col>
-      </Row>
-    </Form>
+              <InputNumber
+                style={{ width: '100%' }}
+                defaultValue={200}
+                formatter={(value) =>
+                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                }
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Risk"
+              name="risk"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select risk of campaign!',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select risk of campaign"
+                // onChange={onGenderChange}
+                allowClear
+              >
+                <Option value="N/A">N/A</Option>
+                <Option value="A">A</Option>
+                <Option value="A-">A-</Option>
+                <Option value="B+">B+</Option>
+                <Option value="B">B</Option>
+                <Option value="B-">B-</Option>
+                <Option value="C+">C+</Option>
+                <Option value="C">C</Option>
+                <Option value="C-">C-</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Form.Item
+              label="Tenor"
+              name="tenor"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter the tenor',
+                },
+              ]}
+              getValueProps={(i) => ({ value: parseFloat(i) })}
+            >
+              <InputNumber style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Form.Item
+              label="Country"
+              name="country"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select country',
+                },
+              ]}
+            >
+              <Select
+                showSearch
+                placeholder="Select country"
+                allowClear
+                options={countryOptions}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <Form.Item
+              label="Project Return"
+              name="return"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter project return',
+                },
+              ]}
+              getValueProps={(i) => ({ value: parseFloat(i) })}
+            >
+              <InputNumber
+                style={{ width: '100%' }}
+                defaultValue={0}
+                stringMode
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label="Funded" name="funded">
+              <InputNumber
+                style={{ width: '100%' }}
+                defaultValue={0}
+                formatter={(value) =>
+                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                }
+                disabled
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label="Password">
+              <Space.Compact style={{ width: '100%' }}>
+                <Form.Item noStyle name="password">
+                  <Input readOnly />
+                </Form.Item>
+                <Form.Item noStyle>
+                  <Tooltip title="Regenerate password">
+                    <Button
+                      icon={<ReloadOutlined />}
+                      onClick={() => regeneratePassword()}
+                      loading={passwordLoading}
+                    />
+                  </Tooltip>
+                </Form.Item>
+              </Space.Compact>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label={`Release Date & Time`} name="release_datetime">
+              <DatePicker
+                showTime
+                format="YYYY-MM-DD HH:mm:ss"
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label="Campaign Slug" name="slug">
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label={`Close Date & Time`} name="expiry_datetime">
+              <DatePicker
+                showTime
+                format="YYYY-MM-DD HH:mm:ss"
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={[20, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item
+              label="Status"
+              name="is_enable"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select campaign status!',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select campaign status"
+                // onChange={onGenderChange}
+                allowClear
+              >
+                <Option value={true}>Online</Option>
+                <Option value={false}>Offline</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Email Payout Reminder"
+              name="send_payout_reminder"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select status payout reminder!',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select status payout reminder"
+                // onChange={onGenderChange}
+                allowClear
+              >
+                <Option value={true}>Active</Option>
+                <Option value={false}>Disable</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Email Requirements"
+              name="requirement_reminder"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please select status email requirement!',
+                },
+              ]}
+            >
+              <Select
+                placeholder="Select status email requirement"
+                // onChange={onGenderChange}
+                allowClear
+              >
+                <Option value={true}>Active</Option>
+                <Option value={false}>Disable</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12}>
+            <Form.Item label={`Snippet`} name="snippet" required>
+              <Input.TextArea rows={3} />
+            </Form.Item>
+
+            <Row>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <Form.Item label="Upload Logo" name="logo">
+                  <Upload
+                    action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
+                    headers={{
+                      Authorization: `Bearer ${user?.token}`,
+                    }}
+                    listType="picture-circle"
+                    onChange={handleChangeLogo}
+                    maxCount={1}
+                    defaultFileList={logo}
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={12} lg={12}>
+                <Form.Item label="Upload Cover" name="cover_image">
+                  <Upload
+                    action={`${API_URL}/campaign/upload-image/${campaign?.slug}`}
+                    headers={{
+                      Authorization: `Bearer ${user?.token}`,
+                    }}
+                    listType="picture-card"
+                    maxCount={1}
+                    onChange={handleChangeCover}
+                    defaultFileList={cover}
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+
+        {campaign !== null && (
+          <Row className="mt-1 mb-1">
+            <Col span={24}>
+              <Form.Item
+                label="Description"
+                name={`description`}
+                style={{ display: loading ? 'block' : 'none' }}
+              >
+                <Input style={{ visibility: 'hidden' }} />
+                <div
+                  style={{
+                    height: 400,
+                    overflow: 'hidden',
+                    borderRadius: '10px',
+                    border: '2px solid #f1f1f1',
+                    padding: '15px',
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: form?.getFieldValue('description'),
+                  }}
+                ></div>
+              </Form.Item>
+              {!loading && (
+                <Form.Item>
+                  <Editor
+                    apiKey={tiny_api_key}
+                    onInit={(evt, editor) => (editorRef.current = editor)}
+                    ref={editorRef}
+                    initialValue={description}
+                    onEditorChange={handleEditorChange}
+                    init={{
+                      height: 500,
+                      width: '100%',
+                      plugins: [
+                        'advlist',
+                        'autolink',
+                        'lists',
+                        'link',
+                        'image',
+                        'charmap',
+                        'preview',
+                        'anchor',
+                        'searchreplace',
+                        'visualblocks',
+                        'code',
+                        'fullscreen',
+                        'insertdatetime',
+                        'media',
+                        'table',
+                        'code',
+                        'help',
+                        'wordcount',
+                      ],
+                      toolbar:
+                        'undo redo | blocks | ' +
+                        'bold italic forecolor | alignleft aligncenter ' +
+                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                        'removeformat | help',
+                      content_style:
+                        'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                    }}
+                  />
+                </Form.Item>
+              )}
+            </Col>
+          </Row>
+        )}
+
+        <Divider orientation="left" dashed>
+          Related Campaigns
+        </Divider>
+
+        <Row className="mt-1" gutter={20}>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Form.Item label="Campaign 1" name="related_campaign_id_1">
+              <Select
+                showSearch
+                filterOption={(input, option: any) =>
+                  (option?.label.toLowerCase() ?? '').includes(input)
+                }
+                placeholder="Select campaign"
+                // onChange={onGenderChange}
+                allowClear
+                options={campaignOptions}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Form.Item label="Campaign 2" name="related_campaign_id_2">
+              <Select
+                showSearch
+                filterOption={(input, option: any) =>
+                  (option?.label.toLowerCase() ?? '').includes(input)
+                }
+                placeholder="Select campaign"
+                // onChange={onGenderChange}
+                allowClear
+                options={campaignOptions}
+              />
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={8} lg={8}>
+            <Form.Item label="Campaign 3" name="related_campaign_id_3">
+              <Select
+                showSearch
+                filterOption={(input, option: any) =>
+                  (option?.label.toLowerCase() ?? '').includes(input)
+                }
+                placeholder="Select campaign"
+                // onChange={onGenderChange}
+                allowClear
+                options={campaignOptions}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Divider orientation="left" dashed></Divider>
+
+        <Row>
+          <Col span={12}>
+            <Space>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: '185px' }}
+                loading={loading}
+                icon={<SendOutlined />}
+              >
+                Submit
+              </Button>
+              <Button onClick={() => loadCampaign(slug)}>Reset</Button>
+            </Space>
+          </Col>
+        </Row>
+      </Form>
+    </>
   )
 }
 
