@@ -117,6 +117,7 @@ const DetailCampaign = ({ campaign, user }: IProps) => {
         handleClose={() => setPreviewOpen(false)}
         isModalOpen={previewOpen}
         campaign={campaign}
+        user={user}
       />
     </>
   )

@@ -37,7 +37,7 @@ const ResultVeriff = ({ veriff, token, initUser }: IProps) => {
   const importDocument = async () => {
     setLoadingImport(true)
 
-    Api.get(`users/${veriff?.user_id}/import/document`, token)
+    Api.get(`users/${veriff?.user_id}/veriff/import`, token)
       .then((res: any) => {
         notification.success({ message: res.data.message })
         initUser()

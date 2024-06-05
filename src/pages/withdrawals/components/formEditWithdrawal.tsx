@@ -141,6 +141,7 @@ const FormEditWithdrawal = ({
         onCancel={handleHide}
         footer={false}
         style={{ top: '15px' }}
+        centered
       >
         <Form
           form={form}
@@ -152,6 +153,7 @@ const FormEditWithdrawal = ({
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           className="mt-2"
+          size="large"
         >
           <Form.Item
             label="Bank ID"
