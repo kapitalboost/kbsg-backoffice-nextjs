@@ -271,11 +271,7 @@ const FormWriteUp = ({
           </Form.Item>
         </Col>
         <Col xs={24} sm={24} md={12} lg={8}>
-          <Form.Item
-            label="SME Sub Type"
-            name="subtype"
-            // rules={[{ required: true, message: 'Please select subtype!' }]}
-          >
+          <Form.Item label="SME Sub Type" name="subtype">
             <Select placeholder="Select SME subtype" allowClear>
               <Option value="ASSET PURCHASE FINANCING">
                 ASSET PURCHASE FINANCING
