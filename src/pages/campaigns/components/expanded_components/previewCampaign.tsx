@@ -5,6 +5,7 @@ import {
   BuildOutlined,
   FileMarkdownOutlined,
   HomeOutlined,
+  LoadingOutlined,
   ProjectOutlined,
   PushpinOutlined,
 } from '@ant-design/icons'
@@ -29,11 +30,16 @@ const PreviewCampaign = ({
 }: Iprops) => {
   const screens = useBreakpoint()
   const [data, setData] = useState<any>(undefined)
+  const [loading, setLoading] = useState(false)
 
   const init = () => {
-    Api.get(`campaign/detail/${campaign.slug}`, user.token).then((res: any) => {
-      setData(res.data)
-    })
+    setLoading(true)
+
+    Api.get(`campaign/detail/${campaign.slug}`, user.token)
+      .then((res: any) => {
+        setData(res.data)
+      })
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
@@ -67,136 +73,149 @@ const PreviewCampaign = ({
       }
       centered
     >
-      {data ? (
+      {loading ? (
+        <div className="text-center my-5">
+          <LoadingOutlined style={{ fontSize: '2.5rem' }} />
+          <h3>Loading..</h3>
+        </div>
+      ) : (
         <>
-          <Row>
-            <Col span={24}>
-              <img
-                src={data.cover_image}
-                width={`100%`}
-                height={`450`}
-                alt="Campaign Banner"
-              />
-              <Card
-                style={{
-                  position: 'absolute',
-                  width:
-                    screens.xs || (screens.sm && !screens.md) ? '85%' : '500px',
-                  top: '140px',
-                  left:
-                    screens.xs || (screens.sm && !screens.md)
-                      ? 'calc((100%/2) - (85%/2))'
-                      : 'calc((100%/2) - (500px/2))',
-                  boxShadow: '0 0 10px rgba(0,0,0,.5)',
-                }}
-                title={<h2 style={{ padding: '0' }}>{data.acronim}</h2>}
-                headStyle={{ border: 'none' }}
-              >
-                <Space className="space-between">
-                  <span>
-                    <PushpinOutlined />
-                    {` ${data.country}`}
-                  </span>
+          {data ? (
+            <>
+              <Row>
+                <Col span={24}>
+                  <img
+                    src={data.cover_image}
+                    width={`100%`}
+                    height={`450`}
+                    alt="Campaign Banner"
+                  />
+                  <Card
+                    style={{
+                      position: 'absolute',
+                      width:
+                        screens.xs || (screens.sm && !screens.md)
+                          ? '85%'
+                          : '500px',
+                      top: '140px',
+                      left:
+                        screens.xs || (screens.sm && !screens.md)
+                          ? 'calc((100%/2) - (85%/2))'
+                          : 'calc((100%/2) - (500px/2))',
+                      boxShadow: '0 0 10px rgba(0,0,0,.5)',
+                    }}
+                    title={<h2 style={{ padding: '0' }}>{data.acronim}</h2>}
+                    headStyle={{ border: 'none' }}
+                  >
+                    <Space className="space-between">
+                      <span>
+                        <PushpinOutlined />
+                        {` ${data.country}`}
+                      </span>
 
-                  <span>
-                    <ProjectOutlined />
-                    {` ${data.industry}`}
-                  </span>
-                </Space>
-              </Card>
-            </Col>
-          </Row>
+                      <span>
+                        <ProjectOutlined />
+                        {` ${data.industry}`}
+                      </span>
+                    </Space>
+                  </Card>
+                </Col>
+              </Row>
 
-          <Row gutter={[20, 20]} style={{ marginTop: '15px' }}>
-            <Col
-              xs={24}
-              sm={24}
-              md={16}
-              order={screens.xs || (screens.sm && !screens.md) ? 1 : 0}
-            >
-              {screens.xs ||
-                (screens.sm && !screens.md && <h1>Campaign Description</h1>)}
-              <div
-                className="campaign-description"
-                style={{ width: '100%' }}
-                dangerouslySetInnerHTML={{ __html: data.description }}
-              ></div>
-            </Col>
-
-            <Col
-              xs={24}
-              sm={24}
-              md={8}
-              order={screens.xs || (screens.sm && !screens.md) ? 0 : 1}
-            >
-              <Card
-                title={<h3 style={{ textAlign: 'center' }}>Overview</h3>}
-                bodyStyle={{ padding: '0' }}
-                style={{ marginBottom: '30px' }}
-              >
-                <List
-                  size={`small`}
-                  dataSource={overview}
-                  renderItem={(item, idx) => (
-                    <List.Item>
-                      <List.Item.Meta title={item.title} />
-
-                      <div>{item.content}</div>
-                    </List.Item>
-                  )}
-                />
-              </Card>
-
-              {data.campaign_images.length && (
-                <>
-                  <h2 className="text-center">Gallery</h2>
-                  <Row gutter={[10, 10]}>
-                    {data.campaign_images.map((image: any) => (
-                      <Col span={6} key={Math.random()}>
-                        <a
-                          href={image.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src={image.link}
-                            width={'100%'}
-                            alt={image.name}
-                          />
-                        </a>
-                      </Col>
+              <Row gutter={[20, 20]} style={{ marginTop: '15px' }}>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={16}
+                  order={screens.xs || (screens.sm && !screens.md) ? 1 : 0}
+                >
+                  {screens.xs ||
+                    (screens.sm && !screens.md && (
+                      <h1>Campaign Description</h1>
                     ))}
-                  </Row>
-                </>
-              )}
+                  <div
+                    className="campaign-description"
+                    style={{ width: '100%' }}
+                    dangerouslySetInnerHTML={{ __html: data.description }}
+                  ></div>
+                </Col>
 
-              {data.campaign_pdfs.length && (
-                <div style={{ marginTop: '30px' }}>
-                  <h2 className="text-center">Documents</h2>
-                  <Row gutter={[10, 10]}>
-                    <Col span={24}>
-                      <ul>
-                        {data.campaign_pdfs.map((file: any) => (
-                          <li key={Math.random()}>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={8}
+                  order={screens.xs || (screens.sm && !screens.md) ? 0 : 1}
+                >
+                  <Card
+                    title={<h3 style={{ textAlign: 'center' }}>Overview</h3>}
+                    bodyStyle={{ padding: '0' }}
+                    style={{ marginBottom: '30px' }}
+                  >
+                    <List
+                      size={`small`}
+                      dataSource={overview}
+                      renderItem={(item, idx) => (
+                        <List.Item>
+                          <List.Item.Meta title={item.title} />
+
+                          <div>{item.content}</div>
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+
+                  {data.campaign_images.length > 0 && (
+                    <>
+                      <h2 className="text-center">Gallery</h2>
+                      <Row gutter={[10, 10]}>
+                        {data.campaign_images.map((image: any) => (
+                          <Col span={6} key={Math.random()}>
                             <a
-                              href={file.link}
+                              href={image.link}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              {file.name}
+                              <img
+                                src={image.link}
+                                width={'100%'}
+                                alt={image.name}
+                              />
                             </a>
-                          </li>
+                          </Col>
                         ))}
-                      </ul>
-                    </Col>
-                  </Row>
-                </div>
-              )}
-            </Col>
-          </Row>
+                      </Row>
+                    </>
+                  )}
+
+                  {data.campaign_pdfs.length > 0 && (
+                    <div style={{ marginTop: '30px' }}>
+                      <h2 className="text-center">Documents</h2>
+                      <Row gutter={[10, 10]}>
+                        <Col span={24}>
+                          <ul>
+                            {data.campaign_pdfs.map((file: any) => (
+                              <li key={Math.random()}>
+                                <a
+                                  href={file.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {file.name}
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </Col>
+                      </Row>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </>
+          ) : (
+            <h1>Data Not Found</h1>
+          )}
         </>
-      ) : (
-        <h1>Data Not Found</h1>
       )}
     </Modal>
   )
