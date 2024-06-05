@@ -1,5 +1,6 @@
 import { Api } from '@/api/api'
 import { currency } from '@/utils/helpers'
+import { isMobile } from '@/utils/screen'
 import {
   BuildOutlined,
   FileMarkdownOutlined,
@@ -7,8 +8,9 @@ import {
   ProjectOutlined,
   PushpinOutlined,
 } from '@ant-design/icons'
-import { Card, Col, List, Modal, Row, Space } from 'antd'
+import { Card, Col, Grid, List, Modal, Row, Space } from 'antd'
 import { useEffect, useState } from 'react'
+const { useBreakpoint } = Grid
 
 interface Iprops {
   isModalOpen: boolean
@@ -25,6 +27,7 @@ const PreviewCampaign = ({
   campaign,
   user,
 }: Iprops) => {
+  const screens = useBreakpoint()
   const [data, setData] = useState<any>(undefined)
 
   const init = () => {
@@ -55,7 +58,13 @@ const PreviewCampaign = ({
       open={isModalOpen}
       footer={false}
       onCancel={handleClose}
-      width={`980`}
+      width={
+        screens.xs || (screens.sm && !screens.lg)
+          ? `100%`
+          : screens.md && !screens.xl
+          ? `85%`
+          : `70%`
+      }
       centered
     >
       {data ? (
@@ -71,9 +80,13 @@ const PreviewCampaign = ({
               <Card
                 style={{
                   position: 'absolute',
-                  width: '500px',
+                  width:
+                    screens.xs || (screens.sm && !screens.md) ? '85%' : '500px',
                   top: '140px',
-                  left: 'calc((100%/2) - (500px/2))',
+                  left:
+                    screens.xs || (screens.sm && !screens.md)
+                      ? 'calc((100%/2) - (85%/2))'
+                      : 'calc((100%/2) - (500px/2))',
                   boxShadow: '0 0 10px rgba(0,0,0,.5)',
                 }}
                 title={<h2 style={{ padding: '0' }}>{data.acronim}</h2>}
@@ -93,13 +106,29 @@ const PreviewCampaign = ({
               </Card>
             </Col>
           </Row>
+
           <Row gutter={[20, 20]} style={{ marginTop: '15px' }}>
-            <Col span={16}>
-              <span
+            <Col
+              xs={24}
+              sm={24}
+              md={16}
+              order={screens.xs || (screens.sm && !screens.md) ? 1 : 0}
+            >
+              {screens.xs ||
+                (screens.sm && !screens.md && <h1>Campaign Description</h1>)}
+              <div
+                className="campaign-description"
+                style={{ width: '100%' }}
                 dangerouslySetInnerHTML={{ __html: data.description }}
-              ></span>
+              ></div>
             </Col>
-            <Col span={8}>
+
+            <Col
+              xs={24}
+              sm={24}
+              md={8}
+              order={screens.xs || (screens.sm && !screens.md) ? 0 : 1}
+            >
               <Card
                 title={<h3 style={{ textAlign: 'center' }}>Overview</h3>}
                 bodyStyle={{ padding: '0' }}
