@@ -23,9 +23,11 @@ import type { UploadFile } from 'antd/es/upload/interface'
 import type { UploadProps } from 'antd'
 import { Api } from '@/api/api'
 
-import weekday from 'dayjs/plugin/weekday'
-import timezone from 'dayjs/plugin/timezone'
+// import weekday from 'dayjs/plugin/weekday'
 import localeData from 'dayjs/plugin/localeData'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+
 import TeamInspector from '../components/teamInspector'
 import Link from 'next/link'
 
@@ -39,11 +41,11 @@ import {
   SendOutlined,
 } from '@ant-design/icons'
 
-dayjs.extend(weekday)
-dayjs.extend(localeData)
-dayjs.extend(timezone)
+import type { DatePickerProps } from 'antd'
 
-dayjs.tz.setDefault('Asia/Singapore')
+// dayjs.extend(weekday)
+dayjs.extend(utc)
+dayjs.extend(localeData)
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
@@ -98,11 +100,15 @@ const FormWriteUpTwo = ({
 
     if (campaign) {
       setDescription(campaign.description)
+
+      console.log(dayjs(campaign.release_datetime).format())
     }
   }, [])
 
   const onFinish = (values: any) => {
     setLoading(true)
+    // let release_at = dayjs(values.release_datetime)
+    // let expire_at = dayjs(values.expiry_datetime)
 
     Api.post(`campaign/update/${slug}`, user?.token, user.id, {
       ...values,
@@ -115,7 +121,22 @@ const FormWriteUpTwo = ({
         }, 500)
       })
       .catch((err: any) => {
-        notification.error({ message: 'error' })
+        let setError: { name: any; errors: any }[] = []
+        const { data } = err
+        const errors = data.data
+
+        notification.error({ message: data.message })
+
+        if (errors) {
+          Object.keys(errors).forEach((key: any) => {
+            setError.push({
+              name: key,
+              errors: errors[key],
+            })
+          })
+
+          form.setFields(setError)
+        }
       })
       .finally(() => setLoading(false))
   }
@@ -159,6 +180,15 @@ const FormWriteUpTwo = ({
   const onFinishFailed = () => {
     message.error('Submit failed! Please check the required field.')
   }
+
+  // const onChangeReleaseDate: DatePickerProps['onChange'] = (
+  //   date,
+  //   dateString
+  // ) => {
+  //   console.log(date, dateString)
+  //   form.setFieldValue('release_datetime', dayjs.tz(date, 'Asia/Singapore'))
+  //   // let expire_at = dayjs.tz(values.expiry_datetime, 'Asia/Singapore')
+  // }
 
   return (
     <>
@@ -293,7 +323,6 @@ const FormWriteUpTwo = ({
             >
               <InputNumber
                 style={{ width: '100%' }}
-                defaultValue={100000}
                 formatter={(value) =>
                   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
@@ -323,7 +352,6 @@ const FormWriteUpTwo = ({
             >
               <InputNumber
                 style={{ width: '100%' }}
-                defaultValue={200}
                 formatter={(value) =>
                   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
@@ -404,18 +432,13 @@ const FormWriteUpTwo = ({
               ]}
               getValueProps={(i) => ({ value: parseFloat(i) })}
             >
-              <InputNumber
-                style={{ width: '100%' }}
-                defaultValue={0}
-                stringMode
-              />
+              <InputNumber style={{ width: '100%' }} stringMode />
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12}>
-            <Form.Item label="Funded" name="funded">
+            <Form.Item label="Funded" name="currenct_invest">
               <InputNumber
                 style={{ width: '100%' }}
-                defaultValue={0}
                 formatter={(value) =>
                   `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
@@ -442,11 +465,23 @@ const FormWriteUpTwo = ({
             </Form.Item>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12}>
-            <Form.Item label={`Release Date & Time`} name="release_datetime">
+            <Form.Item
+              label={`Release Date & Time`}
+              name="release_datetime"
+              initialValue={
+                campaign
+                  ? dayjs(campaign.release_datetime)
+                      .utcOffset(8, true)
+                      .utc()
+                      .format('YYYY-MM-DD HH:mm')
+                  : ''
+              }
+            >
               <DatePicker
                 showTime
-                format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm"
                 style={{ width: '100%' }}
+                // onChange={onChangeReleaseDate}
               />
             </Form.Item>
           </Col>
@@ -459,7 +494,7 @@ const FormWriteUpTwo = ({
             <Form.Item label={`Close Date & Time`} name="expiry_datetime">
               <DatePicker
                 showTime
-                format="YYYY-MM-DD HH:mm:ss"
+                format="YYYY-MM-DD HH:mm"
                 style={{ width: '100%' }}
               />
             </Form.Item>

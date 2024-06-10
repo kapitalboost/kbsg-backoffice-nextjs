@@ -39,7 +39,7 @@ const ResultVeriff = ({ veriff, token, initUser }: IProps) => {
 
     Api.get(`users/${veriff?.user_id}/veriff/import`, token)
       .then((res: any) => {
-        notification.success({ message: res.data.message })
+        notification.success({ message: res.message })
         initUser()
       })
       .catch((err) => {
