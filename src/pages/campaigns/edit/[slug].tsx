@@ -95,10 +95,10 @@ const NewCampaign = ({ user }: IProps) => {
         const params = {
           ...res.data,
           release_datetime: res.data.release_datetime
-            ? dayjs(res.data.release_datetime)
+            ? dayjs(res.data.release_datetime).utcOffset(8, true)
             : null,
           expiry_datetime: res.data.expiry_datetime
-            ? dayjs(res.data.expiry_datetime)
+            ? dayjs(dayjs(res.data.expiry_datetime).utcOffset(8, true))
             : null,
           logo: res.data.logo === null ? '' : res.data.logo,
         }
