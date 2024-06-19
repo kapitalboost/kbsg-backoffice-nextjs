@@ -2,7 +2,7 @@ import { Api } from '@/api/api'
 import { teamAnalyst, teamBD } from '@/utils/teamReview'
 import { LoadingOutlined, SendOutlined } from '@ant-design/icons'
 import { Button, Col, Divider, Form, message, Row, Select, Space } from 'antd'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 
 interface IProps {
   user: any
@@ -13,12 +13,10 @@ const TeamInspector = ({ user, slug }: IProps) => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [btnLoading, setBtnLoading] = useState(false)
-  const [bd, setBd] = useState<any>(null)
-  const [analyst, setAnalyst] = useState<any>(null)
+  const [bd, setBd] = useState<any>([])
+  const [analyst, setAnalyst] = useState<any>([])
 
   const initData = () => {
-    setBd(null)
-    setAnalyst(null)
     setLoading(true)
 
     Api.get(`campaign/contract/team-review/${slug}`, user?.token)
@@ -31,8 +29,26 @@ const TeamInspector = ({ user, slug }: IProps) => {
       .finally(() => setLoading(false))
   }
 
+  const initOptionBd = () => {
+    Api.get(`team-analyzers/options/business development`, user?.token).then(
+      (res: any) => {
+        setBd(res.data)
+        console.log(res)
+      }
+    )
+  }
+
+  const initOptionRisk = () => {
+    Api.get(`team-analyzers/options/risk`, user?.token).then((res: any) => {
+      setAnalyst(res.data)
+      console.log(res)
+    })
+  }
+
   useEffect(() => {
     initData()
+    initOptionBd()
+    initOptionRisk()
   }, [])
 
   const onFinish = (values: any) => {
@@ -61,14 +77,6 @@ const TeamInspector = ({ user, slug }: IProps) => {
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
-  }
-
-  const onChangeBd = (value: any) => {
-    setBd(value)
-  }
-
-  const onChangeAnalyst = (value: any) => {
-    setAnalyst(value)
   }
 
   return (
@@ -100,16 +108,9 @@ const TeamInspector = ({ user, slug }: IProps) => {
                 rules={[{ required: true, message: 'Please select BD' }]}
               >
                 <Select
-                  showSearch
                   placeholder="Select a person"
                   optionFilterProp="children"
-                  onChange={(e) => onChangeBd(e)}
-                  filterOption={(input, option) =>
-                    (option?.label ?? '')
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={teamBD}
+                  options={bd}
                 />
               </Form.Item>
             </Col>
@@ -120,16 +121,9 @@ const TeamInspector = ({ user, slug }: IProps) => {
                 rules={[{ required: true, message: 'Please select Analyst' }]}
               >
                 <Select
-                  showSearch
                   placeholder="Select a person"
                   optionFilterProp="children"
-                  onChange={(e) => onChangeAnalyst(e)}
-                  filterOption={(input, option) =>
-                    (option?.label ?? '')
-                      .toLowerCase()
-                      .includes(input.toLowerCase())
-                  }
-                  options={teamAnalyst}
+                  options={analyst}
                 />
               </Form.Item>
             </Col>
