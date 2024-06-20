@@ -112,6 +112,11 @@ export const menuItemsLayout = [
         key: 'mobile-notification',
         path: `/mobile-notification`,
       },
+      {
+        title: 'Teams',
+        key: 'teams',
+        path: `/teams`,
+      },
     ],
   },
 ]
