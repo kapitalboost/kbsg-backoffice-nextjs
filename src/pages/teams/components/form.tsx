@@ -66,10 +66,9 @@ const FormTeam = ({
 
     await Api.post(uri, token, null, values)
       .then((res: any) => {
-        console.log(res)
-
         message.success(res.message)
         onReloadData()
+        handleCancel()
       })
       .catch((err) => {
         if (err.data) {
