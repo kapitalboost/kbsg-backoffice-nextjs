@@ -201,19 +201,15 @@ const Affiliations = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card
-        bodyStyle={!screens.lg ? { padding: '0' } : {}}
-        title={
-          <Typography.Title level={5} className={`m-0`}>
-            Affiliations
-          </Typography.Title>
-        }
-      >
+      <Card bodyStyle={{ padding: '0' }} title={'Affiliations'}>
         <Table
           dataSource={data}
           columns={columns}
           loading={loading}
           scroll={{ x: 600 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
     </>

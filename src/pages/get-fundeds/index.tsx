@@ -110,29 +110,22 @@ const Banks = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Row>
-          <Col span={24}>
-            <Space className="space-between mb-1">
-              <h3 className="m-0 fw-300">
-                <strong>List of Get Funded</strong>
-              </h3>
-              <Search
-                allowClear
-                onSearch={onSearch}
-                placeholder="Find by name"
-              />
-            </Space>
-
-            <Table
-              dataSource={filteredGetFundeds}
-              columns={columns}
-              className={'mt-1'}
-              loading={loading}
-              scroll={{ x: 800 }}
-            />
-          </Col>
-        </Row>
+      <Card
+        title="List of Get Funded"
+        extra={
+          <Search allowClear onSearch={onSearch} placeholder="Find by name" />
+        }
+        bodyStyle={{ padding: '0' }}
+      >
+        <Table
+          dataSource={filteredGetFundeds}
+          columns={columns}
+          loading={loading}
+          scroll={{ x: 800 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
+        />
       </Card>
     </>
   )
