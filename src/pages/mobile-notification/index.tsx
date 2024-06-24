@@ -338,6 +338,7 @@ const MobileNotification = ({ token }: IProps) => {
       </Breadcrumb>
 
       <Card
+        bodyStyle={{ padding: '0' }}
         title="Mobile Notification"
         extra={
           <Button
@@ -356,9 +357,11 @@ const MobileNotification = ({ token }: IProps) => {
           rowKey={`id`}
           dataSource={filteredData}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
           scroll={{ x: 800 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
 

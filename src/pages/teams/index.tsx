@@ -134,14 +134,15 @@ const Teams = ({ user }: IProps) => {
           </h3>
         }
         extra={
-          <Button
-            type="primary"
-            onClick={() => showModal('create', 0)}
-            size="small"
-            icon={<PlusOutlined />}
-          >
-            Create
-          </Button>
+          <Tooltip title="Create new team" placement={`topRight`}>
+            <Button
+              onClick={() => showModal('create', 0)}
+              size="small"
+              icon={<PlusOutlined />}
+            >
+              Create
+            </Button>
+          </Tooltip>
         }
         style={{ overflow: 'hidden' }}
         bodyStyle={{ padding: '0' }}
@@ -149,7 +150,6 @@ const Teams = ({ user }: IProps) => {
         <Table
           dataSource={data}
           columns={columns}
-          className={'mt-1'}
           loading={loading}
           scroll={{ x: 800 }}
         />

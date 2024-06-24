@@ -201,32 +201,29 @@ const ContractTemplates = ({ user }: IProps) => {
       </Breadcrumb>
 
       <Card
-        bodyStyle={!screens.lg ? { padding: '0' } : {}}
-        title={
-          <Space className="space-between">
-            <Typography.Title level={5} className="m-0">
-              Contact templates
-            </Typography.Title>
-
-            <Space wrap>
-              <Search
-                allowClear
-                placeholder="Search contract"
-                onSearch={onSearch}
-                style={{ width: screens.xs ? '130px' : '200px' }}
-              />
-              <Tooltip title="Create new template" placement={`topRight`}>
-                {/* <Link href={'/contract-templates/new'}> */}
-                <Button
-                  type="dashed"
-                  onClick={() => setIsModalOpen(true)}
-                  disabled={!screens.md}
-                >
-                  <PlusOutlined />
-                </Button>
-                {/* </Link> */}
-              </Tooltip>
-            </Space>
+        bodyStyle={{ padding: '0' }}
+        title="Contact templates"
+        extra={
+          <Space wrap>
+            <Search
+              allowClear
+              placeholder="Search contract"
+              onSearch={onSearch}
+              style={{ width: screens.xs ? '130px' : '200px' }}
+              size="small"
+            />
+            <Tooltip title="Create new template" placement={`topRight`}>
+              {/* <Link href={'/contract-templates/new'}> */}
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                disabled={!screens.md}
+                icon={<PlusOutlined />}
+                size="small"
+              >
+                Create
+              </Button>
+              {/* </Link> */}
+            </Tooltip>
           </Space>
         }
       >
@@ -235,6 +232,9 @@ const ContractTemplates = ({ user }: IProps) => {
           columns={columns}
           loading={loading}
           scroll={{ x: 1200 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
 

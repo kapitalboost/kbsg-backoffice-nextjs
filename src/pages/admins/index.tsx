@@ -274,21 +274,18 @@ const Admins = ({ user }: IProps) => {
       </Breadcrumb>
 
       <Card
-        bodyStyle={!screens.lg ? { padding: '0' } : {}}
-        title={
-          <Space className="space-between">
-            <Typography.Title level={5} className="m-0">
-              List of Admins
-            </Typography.Title>
-
-            <Tooltip title="Add new admin">
-              <Button
-                size="small"
-                icon={<PlusOutlined />}
-                onClick={() => onOpenForm('create', {})}
-              ></Button>
-            </Tooltip>
-          </Space>
+        bodyStyle={{ padding: '0' }}
+        title="List of Admins"
+        extra={
+          <Tooltip title="Add new admin" placement={'topRight'}>
+            <Button
+              size="small"
+              icon={<PlusOutlined />}
+              onClick={() => onOpenForm('create', {})}
+            >
+              Create
+            </Button>
+          </Tooltip>
         }
       >
         <Table
@@ -297,6 +294,9 @@ const Admins = ({ user }: IProps) => {
           loading={loading}
           rowKey={`id`}
           scroll={{ x: 800 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
 
         <FormAdmin

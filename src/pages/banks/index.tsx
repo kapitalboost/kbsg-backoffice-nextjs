@@ -294,31 +294,28 @@ const Banks = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card>
-        <Space className="space-between mb-1">
-          <Typography.Title
-            level={4}
-            className={`m-0`}
-            style={{ fontWeight: '500' }}
-          >
-            List of Banks
-          </Typography.Title>
-
-          <Tooltip title="Add new bank account">
+      <Card
+        title="List of Banks"
+        bodyStyle={{ padding: '0' }}
+        extra={
+          <Tooltip title="Add new bank account" placement={'topRight'}>
             <Button
               size="small"
               icon={<PlusOutlined />}
               onClick={() => onOpenForm('create', {})}
-            ></Button>
+            >
+              Create
+            </Button>
           </Tooltip>
-        </Space>
-
+        }
+      >
         <Table
           dataSource={banks}
           columns={columns}
           className={'mt-1'}
           loading={loading}
           scroll={{ x: 800 }}
+          pagination={{ position: ['bottomCenter'] }}
         />
 
         <FormBank
