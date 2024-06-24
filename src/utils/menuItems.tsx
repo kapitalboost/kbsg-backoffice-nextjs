@@ -104,8 +104,8 @@ export const menuItemsLayout = [
       },
       {
         title: 'Contact Form',
-        key: 'contact-form',
-        path: `/contact-form`,
+        key: 'contacts',
+        path: `/contacts`,
       },
       {
         title: 'Mobile Notification',
