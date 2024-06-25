@@ -298,25 +298,20 @@ const Blogs = ({ user }: IProps) => {
       </Breadcrumb>
 
       <Card
-        bodyStyle={!screens.lg ? { padding: '0' } : {}}
-        title={
-          <Space className="space-between">
-            <Typography.Title level={5} className={`m-0`}>
-              List of Blogs
-            </Typography.Title>
-
-            <Tooltip title="Add new blog">
-              <Link href={`/blogs/add`}>
-                <Button
-                  size="small"
-                  icon={<PlusOutlined />}
-                  disabled={!screens.md}
-                >
-                  Add a New Blog
-                </Button>
-              </Link>
-            </Tooltip>
-          </Space>
+        bodyStyle={{ padding: '0' }}
+        title={'List of Blogs'}
+        extra={
+          <Tooltip title="Add a new blog" placement="topRight">
+            <Link href={`/blogs/add`}>
+              <Button
+                size="small"
+                icon={<PlusOutlined />}
+                disabled={!screens.md}
+              >
+                Create
+              </Button>
+            </Link>
+          </Tooltip>
         }
       >
         <Table
@@ -324,6 +319,9 @@ const Blogs = ({ user }: IProps) => {
           columns={columns}
           loading={loading}
           scroll={{ x: 800 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
 

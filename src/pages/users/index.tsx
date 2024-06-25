@@ -390,24 +390,24 @@ const Users = ({ user }: IProps) => {
       </Breadcrumb>
 
       <Card
-        title={
-          <Space className="space-between" size={'large'}>
-            <Typography.Title level={5} className="m-0">
-              Data Users
-            </Typography.Title>
-            <RangePicker
-              placeholder={[`Register start date`, `Register end date`]}
-              format={'YYYY/MM/DD'}
-              onChange={(values) => onSelectDateRange(values)}
-            />
-          </Space>
+        title={'Data Users'}
+        extra={
+          <RangePicker
+            placeholder={[`Register start date`, `Register end date`]}
+            format={'YYYY/MM/DD'}
+            onChange={(values) => onSelectDateRange(values)}
+          />
         }
+        bodyStyle={{ padding: '0' }}
       >
         <Table
           dataSource={users}
           columns={columns}
           loading={loading}
           scroll={{ x: 800 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
 

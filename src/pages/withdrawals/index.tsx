@@ -445,29 +445,28 @@ const Withdrawals = ({ user }: IProps) => {
 
   return (
     <Card
-      title={
-        <Space className="space-between" align="center">
-          <Typography.Title level={5} className="m-0">
-            KB wallet withdrawals
-          </Typography.Title>
-          <Tooltip title="Add withdrawal request">
-            <Button
-              size="small"
-              icon={<PlusOutlined />}
-              onClick={() => setAddWithdrawalModalOpen(true)}
-            >
-              Add new request
-            </Button>
-          </Tooltip>
-        </Space>
+      title={'KB wallet withdrawals'}
+      extra={
+        <Tooltip title="Add withdrawal request">
+          <Button
+            size="small"
+            icon={<PlusOutlined />}
+            onClick={() => setAddWithdrawalModalOpen(true)}
+          >
+            Add new request
+          </Button>
+        </Tooltip>
       }
+      bodyStyle={{ padding: '0' }}
     >
       <Table
         dataSource={withdrawals}
         columns={columns}
-        className={'mt-1'}
         loading={loading}
         scroll={{ x: 1300 }}
+        pagination={{
+          position: ['bottomCenter'],
+        }}
       />
 
       <FormWithdrawal

@@ -485,6 +485,7 @@ const Investments = ({ user }: IProps) => {
             Add investment
           </Button>
         }
+        bodyStyle={{ padding: '0' }}
       >
         <Row>
           <Col span={24}>
@@ -492,9 +493,11 @@ const Investments = ({ user }: IProps) => {
               rowKey={'id'}
               dataSource={investments}
               columns={columns}
-              className={'mt-1'}
               loading={loading}
               scroll={{ x: 1300 }}
+              pagination={{
+                position: ['bottomCenter'],
+              }}
             />
           </Col>
         </Row>

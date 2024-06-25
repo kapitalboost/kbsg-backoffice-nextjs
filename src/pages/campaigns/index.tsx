@@ -516,22 +516,18 @@ const Index = ({ user }: IProps) => {
       </Breadcrumb>
 
       <Card
-        title={
-          <Space className="space-between" align="center">
-            <Typography.Title level={4} className={`m-0`}>
-              Campaign
-            </Typography.Title>
-            <Tooltip title="Create new campaign" placement={`topRight`}>
-              <Button
-                onClick={() => setNewCampaignPopup(true)}
-                icon={<PlusOutlined />}
-                size="small"
-                type="primary"
-              >
-                Create
-              </Button>
-            </Tooltip>
-          </Space>
+        bodyStyle={{ padding: '0' }}
+        title={'Campaign'}
+        extra={
+          <Tooltip title="Create new campaign" placement={`topRight`}>
+            <Button
+              onClick={() => setNewCampaignPopup(true)}
+              icon={<PlusOutlined />}
+              size="small"
+            >
+              Create
+            </Button>
+          </Tooltip>
         }
         style={{ background: colorBgContainer }}
       >
@@ -564,6 +560,7 @@ const Index = ({ user }: IProps) => {
             }}
             scroll={{ x: 1450 }}
             pagination={{
+              position: ['bottomCenter'],
               total: campaigns?.total,
               current: campaigns?.current_page,
               pageSize: 10,

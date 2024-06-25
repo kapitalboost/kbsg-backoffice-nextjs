@@ -228,19 +228,15 @@ const Referals = ({ user }: IProps) => {
         <Breadcrumb.Item>List</Breadcrumb.Item>
       </Breadcrumb>
 
-      <Card
-        bodyStyle={!screens.lg ? { padding: '0' } : {}}
-        title={
-          <Typography.Title level={3} className={`m-0`}>
-            Referals
-          </Typography.Title>
-        }
-      >
+      <Card bodyStyle={{ padding: '0' }} title={'Referals'}>
         <Table
           dataSource={data}
           columns={columns}
           loading={loading}
           scroll={{ x: 1300 }}
+          pagination={{
+            position: ['bottomCenter'],
+          }}
         />
       </Card>
     </>
