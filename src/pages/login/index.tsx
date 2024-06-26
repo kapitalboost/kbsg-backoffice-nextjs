@@ -7,18 +7,17 @@ import {
   Input,
   Space,
   Alert,
-  notification,
   Grid,
   Typography,
 } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Head from 'next/head'
 // import ForgotPassword from './forgotPassword'
 
 import { signIn } from 'next-auth/react'
 import Router from 'next/router'
 import { LoginOutlined, ReloadOutlined } from '@ant-design/icons'
-import { isMobile, isDesktop, isTablet } from '@/utils/screen'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 const { useBreakpoint } = Grid
 
@@ -27,54 +26,45 @@ interface Props {
 }
 
 const Login = ({ without_layout }: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { executeRecaptcha } = useGoogleReCaptcha()
+  // const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const screens = useBreakpoint()
 
-  useEffect(() => {
-    console.log('Mobile >> ', isMobile(screens))
-    console.log('Tablet >> ', isTablet(screens))
-    console.log('Desktop >> ', isDesktop(screens))
-  })
-
   const onFinish = async (values: any) => {
     setError('')
     setLoading(true)
 
-    const result = await signIn('credentials', {
+    const recaptcha_token: any =
+      executeRecaptcha && (await executeRecaptcha('login'))
+
+    await signIn('credentials', {
       email: values.email,
       password: values.password,
       redirect: false,
       callbackUrl: '/',
+      recaptcha_token,
     })
+      .then((res) => {
+        console.log('error coy : ', res)
+        if (!res?.ok) {
+          setError('Failed to login, Check again your input.')
+        }
 
-    setLoading(false)
-
-    if (result?.error === 'CredentialsSignin') {
-      setError('Email or Password is Wrong')
-    } else {
-      notification.success({
-        message: 'Login Success',
+        if (res?.url) {
+          Router.push(res?.url)
+        }
       })
-
-      if (result?.url) {
-        Router.push(result?.url)
-      }
-    }
+      .catch((e) => {
+        console.log('error catch', e)
+      })
+      .finally(() => setLoading(false))
   }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
-  }
-
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
   }
 
   return (
@@ -115,8 +105,7 @@ const Login = ({ without_layout }: Props) => {
                   alt="Illustration"
                   width={'75%'}
                   style={{
-                    margin: 'auto',
-                    marginBottom: '15px',
+                    margin: '0 auto 15px',
                     padding: '100px 0 10px',
                   }}
                 />
