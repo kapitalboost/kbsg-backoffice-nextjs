@@ -9,6 +9,7 @@ import CardReportKBWallet from './dashboard/cardReportKBWallet'
 import CardReportDevice from './dashboard/cardReportDevice'
 import CardReportCampaign from './dashboard/cardReportCampaign'
 import WithdrawalRequests from './dashboard/withdrawalRequests'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 
 const style: React.CSSProperties = { background: '#0092ff', padding: '8px 0' }
 
@@ -93,7 +94,10 @@ export default Dashboard
 
 export async function getServerSideProps(context: any) {
   const session: any = await getSession(context)
-  const token = session?.user.token
+  console.log(session)
+
+  const user = session?.user
+  const token = user ? (user.token ? user.token : null) : null
 
   return {
     props: {

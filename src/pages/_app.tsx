@@ -7,8 +7,11 @@ import { useEffect, useState } from 'react'
 import React from 'react'
 import { Button, ConfigProvider, theme } from 'antd'
 import { Nunito } from '@next/font/google'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 
 const nunito = Nunito({ subsets: ['latin'] })
+
+const RECAPTCHAKEY = process.env.NEXT_PUBLIC_RECAPTCHA_KEY
 
 React.useLayoutEffect = React.useEffect
 
@@ -51,7 +54,11 @@ export default function App({
         showOnShallow={true}
       />
       {pageProps.without_layout ? (
-        <Component {...pageProps} />
+        <GoogleReCaptchaProvider
+          reCaptchaKey={RECAPTCHAKEY ? RECAPTCHAKEY : ''}
+        >
+          <Component {...pageProps} />
+        </GoogleReCaptchaProvider>
       ) : (
         <KbLayout
           session={session}

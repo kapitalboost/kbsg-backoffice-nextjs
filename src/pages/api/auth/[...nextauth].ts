@@ -1,7 +1,6 @@
 import CredentialsProvider from 'next-auth/providers/credentials'
 import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
-import Router from 'next/router'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -28,7 +27,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials, req) {
-        const { email, password } = credentials as any
+        const { email, password, recaptcha_token } = credentials as any
         const res = await fetch(`${API_URL}/auth/login`, {
           method: 'POST',
           headers: {
@@ -37,6 +36,7 @@ export const authOptions: NextAuthOptions = {
           body: JSON.stringify({
             email,
             password,
+            recaptcha_token,
           }),
         })
 
@@ -47,9 +47,6 @@ export const authOptions: NextAuthOptions = {
         } else {
           return null
         }
-        // if (res.ok === false && data.error === true) {
-        //   return null
-        // } else
       },
     }),
   ],
