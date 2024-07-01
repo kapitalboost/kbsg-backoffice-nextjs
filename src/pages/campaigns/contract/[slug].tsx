@@ -65,7 +65,7 @@ const CampaignContract = ({ user }: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '0',
-      label: <Link href={`/campaigns/edit/${slug}`}>Edit</Link>,
+      label: <Link href={`/campaigns/edit/${campaign?.id}`}>Edit</Link>,
     },
     {
       key: '1',
