@@ -84,13 +84,13 @@ const NewCampaign = ({ user }: IProps) => {
   const [cover, setCover] = useState<UploadFile[]>([])
   const [campaignOptions, setCampaignOptions] = useState([])
 
-  const slug = router.query.slug
+  const id = router.query.id
   const screens = useBreakpoint()
 
-  const loadCampaign = (slug: any) => {
+  const loadCampaign = (id: any) => {
     setCampaign(null)
     setLoading(true)
-    Api.get(`campaign/detail/${slug}`, user.token)
+    Api.get(`campaign/detail/${id}`, user.token)
       .then((res: any) => {
         const params = {
           ...res.data,
@@ -157,20 +157,20 @@ const NewCampaign = ({ user }: IProps) => {
 
   useEffect(() => {
     loadCampaignOptions()
-    loadCampaign(slug)
+    loadCampaign(id)
   }, [])
 
   const onFinish = (values: any) => {
     setLoading(true)
 
-    Api.post(`campaign/update/${slug}`, user.token, user.id, {
+    Api.post(`campaign/update/${id}`, user.token, user.id, {
       ...values,
     })
       .then((res: any) => {
         notification.success({ message: 'Success to update campaign' })
 
         setTimeout(() => {
-          loadCampaign(slug)
+          loadCampaign(id)
         }, 500)
       })
       .catch((err: any) => {
@@ -255,7 +255,7 @@ const NewCampaign = ({ user }: IProps) => {
                       name="company_name"
                       rules={[
                         {
-                          required: true,
+                          required: false,
                           message: 'Please enter company name!',
                         },
                       ]}
@@ -285,7 +285,7 @@ const NewCampaign = ({ user }: IProps) => {
                       label="Industry"
                       name="industry"
                       rules={[
-                        { required: true, message: 'Please enter industry!' },
+                        { required: false, message: 'Please enter industry!' },
                       ]}
                     >
                       <Input placeholder="Enter industry" />
@@ -297,7 +297,7 @@ const NewCampaign = ({ user }: IProps) => {
                       name="company_director"
                       rules={[
                         {
-                          required: true,
+                          required: false,
                           message: 'Please enter the director!',
                         },
                       ]}
@@ -311,7 +311,7 @@ const NewCampaign = ({ user }: IProps) => {
                       name="company_director_email"
                       rules={[
                         {
-                          required: true,
+                          required: false,
                           message: "Please enter the director's email!",
                         },
                       ]}
@@ -781,7 +781,7 @@ const NewCampaign = ({ user }: IProps) => {
                       >
                         Submit
                       </Button>
-                      <Button onClick={() => loadCampaign(slug)}>Reset</Button>
+                      <Button onClick={() => loadCampaign(id)}>Reset</Button>
                     </Space>
                   </Col>
                 </Row>
@@ -796,12 +796,14 @@ const NewCampaign = ({ user }: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '0',
-      label: <Link href={`/campaigns/contract/${slug}`}>Contract</Link>,
+      label: (
+        <Link href={`/campaigns/contract/${campaign?.slug}`}>Contract</Link>
+      ),
     },
     {
       key: '1',
       label: (
-        <Link href={`/campaigns/investment-report/${slug}`}>
+        <Link href={`/campaigns/investment-report/${campaign?.slug}`}>
           Investment Report
         </Link>
       ),
@@ -809,7 +811,9 @@ const NewCampaign = ({ user }: IProps) => {
     {
       key: '2',
       label: (
-        <Link href={`/campaigns/payout-report/${slug}`}>Payout Report</Link>
+        <Link href={`/campaigns/payout-report/${campaign?.slug}`}>
+          Payout Report
+        </Link>
       ),
     },
   ]
@@ -860,7 +864,7 @@ const NewCampaign = ({ user }: IProps) => {
                     form={form}
                     loadCampaign={loadCampaign}
                     user={user}
-                    slug={slug}
+                    id={id}
                     campaign={campaign}
                     campaignOptions={campaignOptions}
                     logo={logo}
@@ -883,7 +887,7 @@ const NewCampaign = ({ user }: IProps) => {
               {
                 label: `BD/Analyst`,
                 key: 'team-inspector',
-                children: <TeamInspector user={user} slug={slug} />,
+                children: <TeamInspector user={user} slug={campaign?.slug} />,
                 disabled: campaign === null,
               },
             ]}

@@ -437,7 +437,7 @@ const Index = ({ user }: IProps) => {
       width: '150px',
       render: (data: any) => (
         <Space size={`small`} className="space-end">
-          <Link href={`/campaigns/edit/${data.slug}`}>
+          <Link href={`/campaigns/edit/${data.id}`}>
             <Button size="small">
               <Tooltip title="Edit campaign">
                 <EditOutlined />

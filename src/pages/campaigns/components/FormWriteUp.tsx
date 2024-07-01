@@ -155,7 +155,7 @@ const FormWriteUp = ({
             name="company_name"
             rules={[
               {
-                required: true,
+                required: false,
                 message: 'Please enter company name!',
               },
             ]}
@@ -169,7 +169,7 @@ const FormWriteUp = ({
             name="country"
             rules={[
               {
-                required: true,
+                required: false,
                 message: 'Please select country',
               },
             ]}
@@ -184,7 +184,7 @@ const FormWriteUp = ({
           <Form.Item
             label="Industry"
             name="industry"
-            rules={[{ required: true, message: 'Please enter industry!' }]}
+            rules={[{ required: false, message: 'Please enter industry!' }]}
           >
             <Input placeholder="Enter industry" />
           </Form.Item>
@@ -195,7 +195,7 @@ const FormWriteUp = ({
             name="company_director"
             rules={[
               {
-                required: true,
+                required: false,
                 message: 'Please enter the director!',
               },
             ]}
@@ -209,7 +209,7 @@ const FormWriteUp = ({
             name="company_director_email"
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Please enter the director's email!",
               },
             ]}

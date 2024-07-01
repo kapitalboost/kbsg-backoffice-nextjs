@@ -56,7 +56,7 @@ const { Option } = Select
 interface IProps {
   form: any
   campaign: any
-  slug: any
+  id: any
   user: any
   loadCampaign: any
   campaignOptions: any
@@ -65,7 +65,7 @@ interface IProps {
 }
 
 const FormWriteUpTwo = ({
-  slug,
+  id,
   user,
   loadCampaign,
   campaign,
@@ -110,14 +110,14 @@ const FormWriteUpTwo = ({
     // let release_at = dayjs(values.release_datetime)
     // let expire_at = dayjs(values.expiry_datetime)
 
-    Api.post(`campaign/update/${slug}`, user?.token, user.id, {
+    Api.post(`campaign/update/${id}`, user?.token, user.id, {
       ...values,
     })
       .then((res: any) => {
         notification.success({ message: 'Success to update campaign' })
 
         setTimeout(() => {
-          loadCampaign(slug)
+          loadCampaign(id)
         }, 500)
       })
       .catch((err: any) => {
@@ -227,7 +227,7 @@ const FormWriteUpTwo = ({
               name="company_name"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: 'Please enter company name!',
                 },
               ]}
@@ -256,7 +256,7 @@ const FormWriteUpTwo = ({
               name="company_director"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: 'Please enter the director!',
                 },
               ]}
@@ -275,7 +275,7 @@ const FormWriteUpTwo = ({
               name="company_director_email"
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Please enter the director's email!",
                 },
               ]}
@@ -287,7 +287,7 @@ const FormWriteUpTwo = ({
             <Form.Item
               label="Industry"
               name="industry"
-              rules={[{ required: true, message: 'Please enter industry!' }]}
+              rules={[{ required: false, message: 'Please enter industry!' }]}
             >
               <Input placeholder="Enter industry" />
             </Form.Item>
@@ -739,7 +739,7 @@ const FormWriteUpTwo = ({
               >
                 Submit
               </Button>
-              <Button onClick={() => loadCampaign(slug)}>Reset</Button>
+              <Button onClick={() => loadCampaign(id)}>Reset</Button>
             </Space>
           </Col>
         </Row>

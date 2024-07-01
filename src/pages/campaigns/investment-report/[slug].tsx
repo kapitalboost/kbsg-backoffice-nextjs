@@ -59,6 +59,7 @@ const InvestmentReport = ({ user }: IProps) => {
   const [loading, setLoading] = useState(false)
   const [loadingExport, setLoadingExport] = useState(false)
   const [campaignName, setCampaignName] = useState('')
+  const [campaignId, setCampaignId] = useState('')
   const [report, setReport] = useState([])
 
   const slug = router.query.slug
@@ -68,6 +69,7 @@ const InvestmentReport = ({ user }: IProps) => {
     Api.get(`campaign/investment-report/${slug}`, user?.token)
       .then((res: any) => {
         setCampaignName(res.data.campaign_name)
+        setCampaignId(res.data.campaign_id)
         setReport(res.data.report)
       })
       .catch((err) => {
@@ -196,7 +198,7 @@ const InvestmentReport = ({ user }: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '0',
-      label: <Link href={`/campaigns/edit/${slug}`}>Edit</Link>,
+      label: <Link href={`/campaigns/edit/${campaignId}`}>Edit</Link>,
     },
     {
       key: '1',

@@ -48,6 +48,7 @@ const InvestmentReport = ({ user }: IProps) => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [loadingExport, setLoadingExport] = useState(false)
+  const [campaignId, setCampaignId] = useState('')
   const [campaignName, setCampaignName] = useState('')
   const [report, setReport] = useState([])
 
@@ -58,6 +59,7 @@ const InvestmentReport = ({ user }: IProps) => {
     Api.get(`campaign/payout-report/${slug}`, user?.token)
       .then((res: any) => {
         setCampaignName(res.data.campaign_name)
+        setCampaignId(res.data.campaign_id)
         setReport(res.data.report)
       })
       .catch((err) => {
@@ -198,7 +200,7 @@ const InvestmentReport = ({ user }: IProps) => {
   const items: MenuProps['items'] = [
     {
       key: '0',
-      label: <Link href={`/campaigns/contract/${slug}`}>Contract</Link>,
+      label: <Link href={`/campaigns/edit/${campaignId}`}>Edit</Link>,
     },
     {
       key: '2',
