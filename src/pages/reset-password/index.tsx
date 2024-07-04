@@ -134,6 +134,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       user: user,
+      without_layout: true,
     },
   }
 }

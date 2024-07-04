@@ -94,7 +94,6 @@ export default Dashboard
 
 export async function getServerSideProps(context: any) {
   const session: any = await getSession(context)
-  console.log(session)
 
   const user = session?.user
   const token = user ? (user.token ? user.token : null) : null
