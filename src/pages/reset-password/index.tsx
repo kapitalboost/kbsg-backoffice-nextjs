@@ -1,6 +1,18 @@
 import { Api } from '@/api/api'
-import { Button, Card, Col, Form, Input, message, Row } from 'antd'
+import { CheckOutlined } from '@ant-design/icons'
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  message,
+  Row,
+  Space,
+} from 'antd'
 import { getSession, signOut } from 'next-auth/react'
+import Head from 'next/head'
 import { useState } from 'react'
 
 interface IProps {
@@ -12,7 +24,6 @@ const ResetPassword = ({ user }: IProps) => {
   const [loading, setLoading] = useState(false)
 
   const onFinish = (values: any) => {
-    console.log('Success:', user)
     setLoading(true)
 
     Api.post(`auth/reset-password/${user?.token}`, user?.token, null, values)
@@ -40,13 +51,28 @@ const ResetPassword = ({ user }: IProps) => {
   }
 
   return (
-    <Card>
-      <Row justify={'center'}>
+    <>
+      <Head>
+        <title>Reset Password | Kapital Boost</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <Row justify={'center'} className="mt-2">
         <Col span={10}>
-          <p className="" style={{ fontSize: '1.25rem' }}>
-            Reset your password periodically to maintain the security of this
-            system
-          </p>
+          <h1>{`Hi ${user?.name}, Change your password`}</h1>
+          <Alert
+            message="You haven't changed your password in the last 3 months. You cannot carry out activities on this website if you have not updated your password"
+            type="warning"
+            showIcon
+          />
+          <br />
+          <Alert
+            message=" Reset your password periodically to maintain the security of this
+            system"
+            type="info"
+            showIcon
+          />
         </Col>
       </Row>
 
@@ -61,6 +87,7 @@ const ResetPassword = ({ user }: IProps) => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
             layout="vertical"
+            size="large"
           >
             <Form.Item
               label="Old Password"
@@ -114,14 +141,23 @@ const ResetPassword = ({ user }: IProps) => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                {`Change password & re-login`}
-              </Button>
+              <Space>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  icon={<CheckOutlined />}
+                  style={{ width: '160px' }}
+                >
+                  {`Submit`}
+                </Button>
+                <Button>{`Forgot Password`}</Button>
+              </Space>
             </Form.Item>
           </Form>
         </Col>
       </Row>
-    </Card>
+    </>
   )
 }
 
