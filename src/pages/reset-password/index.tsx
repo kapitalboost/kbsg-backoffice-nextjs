@@ -40,7 +40,7 @@ const ResetPassword = ({ user }: IProps) => {
       })
       .catch((err) => {
         message.error({
-          content: 'Failed to reset password, please check you input',
+          content: err.data.message,
         })
       })
       .finally(() => setLoading(false))
@@ -51,7 +51,7 @@ const ResetPassword = ({ user }: IProps) => {
   }
 
   return (
-    <>
+    <Card>
       <Head>
         <title>Reset Password | Kapital Boost</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,14 +59,20 @@ const ResetPassword = ({ user }: IProps) => {
       </Head>
 
       <Row justify={'center'} className="mt-2">
-        <Col span={10}>
-          <h1>{`Hi ${user?.name}, Change your password`}</h1>
-          <Alert
-            message="You haven't changed your password in the last 3 months. You cannot carry out activities on this website if you have not updated your password"
-            type="warning"
-            showIcon
-          />
-          <br />
+        <Col xs={24} md={14} lg={12} xl={12} style={{ padding: '0 15px' }}>
+          <h1>
+            {user?.password_expired
+              ? `Hi ${user?.name}, Change your password`
+              : `Change your password`}
+          </h1>
+          {user?.password_expired && (
+            <Alert
+              message="You haven't changed your password in the last 3 months. You cannot carry out activities on this website if you have not updated your password"
+              type="warning"
+              showIcon
+              style={{ marginBottom: '15px' }}
+            />
+          )}
           <Alert
             message=" Reset your password periodically to maintain the security of this
             system"
@@ -77,7 +83,7 @@ const ResetPassword = ({ user }: IProps) => {
       </Row>
 
       <Row justify={'center'}>
-        <Col span={10}>
+        <Col xs={24} md={14} lg={12} xl={12} style={{ padding: '0 15px' }}>
           <Form
             form={form}
             name="basic"
@@ -151,13 +157,13 @@ const ResetPassword = ({ user }: IProps) => {
                 >
                   {`Submit`}
                 </Button>
-                <Button>{`Forgot Password`}</Button>
+                <Button disabled>{`Forgot Password`}</Button>
               </Space>
             </Form.Item>
           </Form>
         </Col>
       </Row>
-    </>
+    </Card>
   )
 }
 
@@ -170,7 +176,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       user: user,
-      without_layout: true,
+      without_layout: user?.password_expired,
     },
   }
 }
