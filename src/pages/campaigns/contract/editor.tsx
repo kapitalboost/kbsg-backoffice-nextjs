@@ -73,7 +73,7 @@ const ContractEditorForm = ({ content, onChangeContent, slug }: MainProps) => {
               'bold italic forecolor | alignleft aligncenter ' +
               'alignright alignjustify | bullist numlist outdent indent | ' +
               'removeformat image | help',
-            // automatic_uploads: false,
+            automatic_uploads: false,
             images_upload_url: `${API_URL}/campaign/upload-image-editor/${slug}`,
             content_style:
               'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
