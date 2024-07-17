@@ -460,6 +460,7 @@ const ContractEditor = ({ user, slug }: IProps) => {
                     key: 'main-content',
                     children: (
                       <ContractEditorForm
+                        slug={slug}
                         content={mainContent}
                         onChangeContent={(content: string) =>
                           setMainContent(content)
@@ -472,6 +473,7 @@ const ContractEditor = ({ user, slug }: IProps) => {
                     key: 'sign content',
                     children: (
                       <ContractEditorForm
+                        slug={slug}
                         content={signContent}
                         onChangeContent={(content: string) =>
                           setSignContent(content)
@@ -484,6 +486,7 @@ const ContractEditor = ({ user, slug }: IProps) => {
                     key: 'attachment-content',
                     children: (
                       <ContractEditorForm
+                        slug={slug}
                         content={attachmentContent}
                         onChangeContent={(content: string) =>
                           setAttachmentContent(content)

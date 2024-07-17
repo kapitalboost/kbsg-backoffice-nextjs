@@ -82,7 +82,7 @@ const DetailCampaign = ({ campaign, user }: IProps) => {
       <Row className="my-2">
         <Col span={24}>
           <Space>
-            <Link href={`/campaigns/edit/${campaign?.slug}`}>
+            <Link href={`/campaigns/edit/${campaign?.id}`}>
               <Button type="primary" icon={<EditOutlined />} size={`small`}>
                 Edit Campaign
               </Button>
