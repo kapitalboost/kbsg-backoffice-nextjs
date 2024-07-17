@@ -190,6 +190,55 @@ const FormWriteUpTwo = ({
   //   // let expire_at = dayjs.tz(values.expiry_datetime, 'Asia/Singapore')
   // }
 
+  const handleImageUpload = (blobInfo: any, progress: any) => {
+    return new Promise<string>((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', 'http://localhost:8000/server.php', true)
+
+      const formData = new FormData()
+      formData.append('file', blobInfo.blob(), blobInfo.filename())
+      //console.log(blobInfo.filename())
+
+      xhr.upload.onprogress = (e) => {
+        progress((e.loaded / e.total) * 100)
+        if (progress && typeof progress === 'function') {
+          const percent = 0
+          progress(percent)
+        }
+      }
+
+      xhr.onload = () => {
+        if (xhr.status === 403) {
+          reject({ message: 'HTTP Error: ' + xhr.status, remove: true })
+          return
+        }
+
+        if (xhr.status < 200 || xhr.status >= 300) {
+          reject('HTTP Error: ' + xhr.status)
+          return
+        }
+
+        const json = JSON.parse(xhr.responseText)
+
+        if (!json || typeof json.location != 'string') {
+          reject('Invalid JSON: ' + xhr.responseText)
+          return
+        }
+
+        resolve(json ? json.location : '')
+      }
+
+      // xhr.onerror = () => {
+      //   reject({ message: "Image upload failed", remove: true });
+      //   if (failure && typeof failure === "function") {
+      //     failure("Image upload failed");
+      //   }
+      // };
+
+      xhr.send(formData)
+    })
+  }
+
   return (
     <>
       <Form
@@ -664,8 +713,11 @@ const FormWriteUpTwo = ({
                       toolbar:
                         'undo redo | blocks | ' +
                         'bold italic forecolor | alignleft aligncenter ' +
-                        'alignright alignjustify | bullist numlist outdent indent | ' +
+                        'alignright alignjustify | bullist numlist outdent indent image | ' +
                         'removeformat | help',
+                      images_upload_url: `${API_URL}/campaigns/upload-image-editor/${campaign?.slug}`,
+                      automatic_uploads: false,
+                      // images_upload_handler: handleImageUpload,
                       content_style:
                         'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
                     }}

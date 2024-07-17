@@ -3,13 +3,15 @@ import { Editor } from '@tinymce/tinymce-react'
 import { useEffect, useState } from 'react'
 
 const tiny_api_key = process.env.NEXT_PUBLIC_TINY_KEY
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 interface MainProps {
   content: string
   onChangeContent: any
+  slug: string
 }
 
-const ContractEditorForm = ({ content, onChangeContent }: MainProps) => {
+const ContractEditorForm = ({ content, onChangeContent, slug }: MainProps) => {
   const [loading, setLoading] = useState(true)
 
   const handleEditorChange = (content: any, editor: any) => {
@@ -70,7 +72,9 @@ const ContractEditorForm = ({ content, onChangeContent }: MainProps) => {
               'undo redo | blocks | ' +
               'bold italic forecolor | alignleft aligncenter ' +
               'alignright alignjustify | bullist numlist outdent indent | ' +
-              'removeformat | help',
+              'removeformat image | help',
+            // automatic_uploads: false,
+            images_upload_url: `${API_URL}/campaign/upload-image-editor/${slug}`,
             content_style:
               'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
 

@@ -35,7 +35,7 @@ const PreviewCampaign = ({
   const init = () => {
     setLoading(true)
 
-    Api.get(`campaign/detail/${campaign.slug}`, user.token)
+    Api.get(`campaign/detail/${campaign?.id}`, user.token)
       .then((res: any) => {
         setData(res.data)
       })
