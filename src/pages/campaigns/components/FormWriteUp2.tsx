@@ -715,8 +715,8 @@ const FormWriteUpTwo = ({
                         'bold italic forecolor | alignleft aligncenter ' +
                         'alignright alignjustify | bullist numlist outdent indent image | ' +
                         'removeformat | help',
-                      images_upload_url: `${API_URL}/campaigns/upload-image-editor/${campaign?.slug}`,
-                      automatic_uploads: false,
+                      images_upload_url: `${API_URL}/campaign/upload-image-editor/${campaign?.slug}`,
+                      // automatic_uploads: false,
                       // images_upload_handler: handleImageUpload,
                       content_style:
                         'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
