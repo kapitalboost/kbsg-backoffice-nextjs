@@ -1,5 +1,6 @@
 import { Api } from '@/api/api'
 import { currency } from '@/utils/helpers'
+import { PlusOutlined } from '@ant-design/icons'
 import {
   Button,
   Grid,
@@ -92,9 +93,15 @@ const InvestmentPayouts = ({ investment, token }: IProps) => {
 
   return (
     <>
-      <Typography.Title level={4} className="m-0 pb-1">
-        Payout Schedule
-      </Typography.Title>
+      <Space className="space-between">
+        <Typography.Title level={4} className="m-0 pb-1">
+          Payout Schedule
+        </Typography.Title>
+
+        <Button icon={<PlusOutlined />} size="small">
+          Add Schedule
+        </Button>
+      </Space>
 
       <Table
         dataSource={payouts}
