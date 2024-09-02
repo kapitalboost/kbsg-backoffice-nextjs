@@ -502,9 +502,9 @@ const FormUser = ({ user }: IProps) => {
                       </Form.Item>
                     </Col>
                     <Col xs={24} sm={24} md={12} lg={12}>
-                      <Form.Item label="Status verified" name="is_verified">
+                      <Form.Item label="Email Verified" name="is_verified">
                         {/* <Input readOnly /> */}
-                        <Select placeholder="Select status">
+                        <Select placeholder="Select status" disabled>
                           <Select.Option value={true}>Verified</Select.Option>
                           <Select.Option value={false}>
                             Not Verified
