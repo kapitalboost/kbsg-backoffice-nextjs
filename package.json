@@ -9,6 +9,8 @@
     "build:local": "env-cmd -f ./.env next build",
     "build:staging": "env-cmd -f ./.env.staging next build",
     "build:production": "env-cmd -f ./.env.production next build",
+    "deploy:dev": "env-cmd -f ./.env.staging next build && pm2 startOrRestart ecosystem.config.js --env dev",
+    "deploy:prod": "env-cmd -f ./.env.production next build && pm2 startOrRestart ecosystem.config.js --env prod",
     "start": "next start",
     "lint": "next lint"
   },
