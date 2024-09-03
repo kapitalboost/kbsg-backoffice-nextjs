@@ -78,7 +78,7 @@ const ResultVeriff = ({ veriff, token, initUser }: IProps) => {
               </Typography>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
-              <h4 className="m-0 p-0">Season Status :</h4>
+              <h4 className="m-0 p-0">Session Status :</h4>
               <Typography.Text
                 className="pb-1 fs-2"
                 style={{ marginBottom: '20px' }}
