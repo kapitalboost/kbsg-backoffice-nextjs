@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { Api } from '@/api/api'
+import { veriffStatusByCode } from '@/utils/veriff-code'
 import {
   CloseCircleOutlined,
   DeleteFilled,
@@ -77,15 +78,25 @@ const ResultVeriff = ({ veriff, token, initUser }: IProps) => {
               </Typography>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
+              <h4 className="m-0 p-0">Session Status :</h4>
+              <Typography.Text
+                className="pb-1 fs-2"
+                style={{ marginBottom: '20px' }}
+              >
+                {veriffStatusByCode(veriff?.code)}
+              </Typography.Text>
+              <br />
               <h4 className="m-0 p-0">Status :</h4>
-              <Typography.Text className="pb-1 fs-2" type="success">
-                {veriff?.status.toUpperCase()}
+              <Typography.Text className="pb-1 fs-2">
+                {veriff?.status}
               </Typography.Text>
             </Col>
             <Col span={24}>
               <h4 className="m-0 p-0">Reason :</h4>
               <Typography.Text className="pb-1 fs-2" italic>
-                -- There is no reason from veriff --
+                {veriff?.reason
+                  ? veriff?.reason
+                  : `-- There is no reason from veriff --`}
               </Typography.Text>
             </Col>
           </Row>

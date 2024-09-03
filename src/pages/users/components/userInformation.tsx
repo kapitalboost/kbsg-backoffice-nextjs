@@ -79,7 +79,7 @@ const UserInformation = ({ user }: IProps) => {
               </Typography>
             </Col>
             <Col xs={24} sm={24} md={12} lg={12}>
-              <h4 className="m-0 p-0">Status Verified :</h4>
+              <h4 className="m-0 p-0">Email Verified :</h4>
               <Typography className="pb-1 fs-2">
                 {user?.is_verified ? 'VERIFIED' : 'NOT VERIFIED'}
               </Typography>
