@@ -44,7 +44,7 @@ interface IProps {
 
 interface DataType {
   key: React.Key
-  name: string
+  full_name: string
   email: string
   country: string
   phone_number: string
@@ -64,15 +64,41 @@ const Users = ({ user }: IProps) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const [filter, setFilter] = useState<any>(null)
+  const [paginate, setPaginate] = useState({
+    per_page: 10,
+    current_page: 1,
+    page: 1,
+    last_page: 0,
+    total: 0,
+    from: 0,
+    to: 0,
+  })
 
   const searchInput = useRef<InputRef>(null)
 
-  const initUser = () => {
+  const initUser = (pagination?: any) => {
     setLoading(true)
 
-    Api.get(`users`, user?.token, filter)
+    const pagin = pagination
+      ? {
+          page: pagination?.current,
+          per_page: pagination?.pageSize,
+        }
+      : paginate
+
+    Api.get(`users`, user?.token, { ...filter, ...pagin })
       .then((res: any) => {
-        setUsers(res.data)
+        const { data } = res
+        setUsers(data.data)
+        setPaginate({
+          ...paginate,
+          per_page: data.per_page,
+          current_page: data.current_page,
+          last_page: data.last_page,
+          total: data.total,
+          from: data.from,
+          to: data.to,
+        })
       })
       .catch((err) => {
         notification.error({ message: 'Failed to fetch data user' })
@@ -227,14 +253,14 @@ const Users = ({ user }: IProps) => {
       dataIndex: 'key',
       key: 'key',
       render: (key: any, data: any, idx: number) => {
-        return <>{idx + 1}</>
+        return <>{paginate.from + idx}</>
       },
     },
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name'),
+      dataIndex: 'full_name',
+      key: 'full_name',
+      ...getColumnSearchProps('full_name'),
     },
     {
       title: 'Email',
@@ -266,7 +292,7 @@ const Users = ({ user }: IProps) => {
     },
     {
       title: 'Wallet Amount',
-      dataIndex: 'wallet_amount',
+      dataIndex: 'wallet_balance',
       key: 'amount',
       render: (amount: number) => currency(amount),
     },
@@ -382,6 +408,17 @@ const Users = ({ user }: IProps) => {
     }
   }
 
+  const onChangeTable = (pagination: any, filters: any, sorter: any) => {
+    setPaginate({
+      ...paginate,
+      current_page: pagination.current,
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    })
+
+    initUser(pagination)
+  }
+
   return (
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
@@ -405,8 +442,14 @@ const Users = ({ user }: IProps) => {
           columns={columns}
           loading={loading}
           scroll={{ x: 800 }}
+          onChange={onChangeTable}
           pagination={{
             position: ['bottomCenter'],
+            current: paginate.current_page,
+            defaultPageSize: 10,
+            pageSizeOptions: [10, 20, 50, 100, 200],
+            pageSize: paginate.per_page,
+            total: paginate.total,
           }}
         />
       </Card>

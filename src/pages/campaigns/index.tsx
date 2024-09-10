@@ -98,9 +98,9 @@ const Index = ({ user }: IProps) => {
 
   const initCampaigns = async (params: any) => {
     setLoading(true)
+
     Api.get('campaign', user.token, params, user.id)
       .then((res: any) => {
-        console.log(res.data)
         setCampaigns(res.data)
       })
       .catch((err) => {
@@ -121,7 +121,6 @@ const Index = ({ user }: IProps) => {
   useEffect(() => {
     initCampaigns({
       ...filter,
-      per_page: 10,
     })
   }, [filter])
 
@@ -563,8 +562,7 @@ const Index = ({ user }: IProps) => {
               position: ['bottomCenter'],
               total: campaigns?.total,
               current: campaigns?.current_page,
-              pageSize: 10,
-              showSizeChanger: false,
+              pageSize: campaigns?.per_page,
               style: { background: colorBgContainer },
             }}
           />

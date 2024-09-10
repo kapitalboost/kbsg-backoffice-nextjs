@@ -87,15 +87,43 @@ const Withdrawals = ({ user }: IProps) => {
     status: '',
     created_at: '',
   })
+  const [paginate, setPaginate] = useState({
+    per_page: 10,
+    current_page: 1,
+    page: 1,
+    last_page: 0,
+    total: 0,
+    from: 0,
+    to: 0,
+  })
 
   const screens = useBreakpoint()
 
-  const init = async () => {
+  const init = async (pagination?: any) => {
     setLoading(true)
 
-    await Api.get(`withdraw`, user?.token, filter)
+    const pagin = pagination
+      ? {
+          page: pagination?.current,
+          per_page: pagination?.pageSize,
+        }
+      : paginate
+
+    await Api.get(`withdraw`, user?.token, { ...filter, ...pagin })
       .then((res: any) => {
-        setWithdrawals(res.data)
+        const { data } = res
+
+        setWithdrawals(data.data)
+
+        setPaginate({
+          ...paginate,
+          per_page: data.per_page,
+          current_page: data.current_page,
+          last_page: data.last_page,
+          total: data.total,
+          from: data.from,
+          to: data.to,
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -310,7 +338,7 @@ const Withdrawals = ({ user }: IProps) => {
       key: 'key',
       width: 70,
       render: (key: any, data: any, idx: number) => {
-        return <>{idx + 1}</>
+        return <>{paginate.from + idx}</>
       },
     },
     {
@@ -435,12 +463,15 @@ const Withdrawals = ({ user }: IProps) => {
     setIsModalOpen(false)
   }
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
-  }
+  const onChangeTable = (pagination: any, filters: any, sorter: any) => {
+    setPaginate({
+      ...paginate,
+      current_page: pagination.current,
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    })
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo)
+    init(pagination)
   }
 
   return (
@@ -464,8 +495,14 @@ const Withdrawals = ({ user }: IProps) => {
         columns={columns}
         loading={loading}
         scroll={{ x: 1300 }}
+        onChange={onChangeTable}
         pagination={{
           position: ['bottomCenter'],
+          current: paginate.current_page,
+          defaultPageSize: 10,
+          pageSizeOptions: [10, 20, 50, 100, 200],
+          pageSize: paginate.per_page,
+          total: paginate.total,
         }}
       />
 
