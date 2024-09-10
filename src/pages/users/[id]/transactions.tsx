@@ -62,18 +62,54 @@ const UserTransaction = ({ user }: IProps) => {
   const [transactions, setTransactions] = useState<any>(null)
   const [walletAmount, setWalletAmount] = useState(0)
   const [withdraws, setWithdraws] = useState<any>(null)
+  const [paginateTransaction, setPaginateTransaction] = useState({
+    per_page: 10,
+    current_page: 1,
+    page: 1,
+    last_page: 0,
+    total: 0,
+    from: 0,
+    to: 0,
+  })
+  const [paginateWithdraw, setPaginateWithdraw] = useState({
+    per_page: 10,
+    current_page: 1,
+    page: 1,
+    last_page: 0,
+    total: 0,
+    from: 0,
+    to: 0,
+  })
 
   const user_id = router.query.id
   const screens = useBreakpoint()
 
-  const initTransaction = () => {
+  const initTransaction = (pagination?: any) => {
     setLoadingTransaction(true)
 
-    Api.get(`transactions/${user_id}`, user?.token)
+    const pagin = pagination
+      ? {
+          page: pagination?.current,
+          per_page: pagination?.pageSize,
+        }
+      : paginateTransaction
+
+    Api.get(`transactions/${user_id}`, user?.token, pagin)
       .then((res: any) => {
-        setTransactions(res.data.transactions)
-        setWalletAmount(res.data.wallate_balance)
-        setUserName(res.data.user_name)
+        const { transactions, wallate_balance, user_name } = res.data
+        setTransactions(transactions.data)
+        setWalletAmount(wallate_balance)
+        setUserName(user_name)
+
+        setPaginateTransaction({
+          ...paginateTransaction,
+          per_page: transactions.per_page,
+          current_page: transactions.current_page,
+          last_page: transactions.last_page,
+          total: transactions.total,
+          from: transactions.from,
+          to: transactions.to,
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -81,12 +117,30 @@ const UserTransaction = ({ user }: IProps) => {
       .finally(() => setLoadingTransaction(false))
   }
 
-  const initWithdraw = () => {
+  const initWithdraw = (pagination?: any) => {
     setLoadingWithdraw(true)
 
-    Api.get(`withdraw/${user_id}`, user?.token)
+    const pagin = pagination
+      ? {
+          page: pagination?.current,
+          per_page: pagination?.pageSize,
+        }
+      : paginateWithdraw
+
+    Api.get(`withdraw/${user_id}`, user?.token, pagin)
       .then((res: any) => {
-        setWithdraws(res.data)
+        const { data } = res
+        setWithdraws(data.data)
+
+        setPaginateWithdraw({
+          ...paginateWithdraw,
+          per_page: data.per_page,
+          current_page: data.current_page,
+          last_page: data.last_page,
+          total: data.total,
+          from: data.from,
+          to: data.to,
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -132,6 +186,36 @@ const UserTransaction = ({ user }: IProps) => {
     })
   }
 
+  const onChangeTableTransaction = (
+    pagination: any,
+    filters: any,
+    sorter: any
+  ) => {
+    setPaginateTransaction({
+      ...paginateTransaction,
+      current_page: pagination.current,
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    })
+
+    initTransaction(pagination)
+  }
+
+  const onChangeTableWithdraw = (
+    pagination: any,
+    filters: any,
+    sorter: any
+  ) => {
+    setPaginateWithdraw({
+      ...paginateWithdraw,
+      current_page: pagination.current,
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    })
+
+    initWithdraw(pagination)
+  }
+
   // columns for data transaction
   const columns = [
     {
@@ -139,7 +223,7 @@ const UserTransaction = ({ user }: IProps) => {
       dataIndex: 'key',
       key: 'key',
       render: (key: any, data: any, idx: number) => {
-        return <>{idx + 1}</>
+        return <>{paginateTransaction.from + idx}</>
       },
     },
     {
@@ -238,7 +322,7 @@ const UserTransaction = ({ user }: IProps) => {
       dataIndex: 'key',
       key: 'key',
       render: (key: any, data: any, idx: number) => {
-        return <>{idx + 1}</>
+        return <>{paginateWithdraw.from + idx}</>
       },
     },
     {
@@ -344,6 +428,15 @@ const UserTransaction = ({ user }: IProps) => {
             columns={columns}
             loading={loadingTransaction}
             scroll={{ x: 800 }}
+            onChange={onChangeTableTransaction}
+            pagination={{
+              position: ['bottomCenter'],
+              current: paginateTransaction.current_page,
+              defaultPageSize: 10,
+              pageSizeOptions: [10, 50, 100, 200],
+              pageSize: paginateTransaction.per_page,
+              total: paginateTransaction.total,
+            }}
           />
         </>
       ),
@@ -357,6 +450,15 @@ const UserTransaction = ({ user }: IProps) => {
           columns={columnsWithdrawal}
           loading={loadingWithdraw}
           scroll={{ x: 800 }}
+          onChange={onChangeTableWithdraw}
+          pagination={{
+            position: ['bottomCenter'],
+            current: paginateWithdraw.current_page,
+            defaultPageSize: 10,
+            pageSizeOptions: [10, 50, 100, 200],
+            pageSize: paginateWithdraw.per_page,
+            total: paginateWithdraw.total,
+          }}
         />
       ),
     },
