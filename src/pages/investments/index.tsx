@@ -74,6 +74,15 @@ const Investments = ({ user }: IProps) => {
     amount: '',
     status: '',
   })
+  const [paginate, setPaginate] = useState({
+    per_page: 10,
+    current_page: 1,
+    page: 1,
+    last_page: 0,
+    total: 0,
+    from: 0,
+    to: 0,
+  })
 
   const screens = useBreakpoint()
 
@@ -95,21 +104,36 @@ const Investments = ({ user }: IProps) => {
     }
   }
 
-  const init = async () => {
+  const init = async (pagination?: any) => {
     setLoading(true)
 
-    await Api.get(`investments`, user?.token, filter)
+    const pagin = pagination
+      ? {
+          page: pagination?.current,
+          per_page: pagination?.pageSize,
+        }
+      : paginate
+
+    await Api.get(`investments`, user?.token, { ...filter, ...pagin })
       .then((res: any) => {
-        setInvestments(res.data)
+        const { data } = res
+        console.log(data)
+
+        setInvestments(data.data)
+        setPaginate({
+          ...paginate,
+          per_page: data.per_page,
+          current_page: data.current_page,
+          last_page: data.last_page,
+          total: data.total,
+          from: data.from,
+          to: data.to,
+        })
       })
       .catch((err) => {
         console.log(err)
       })
       .finally(() => setLoading(false))
-
-    setTimeout(() => {
-      setLoading(false)
-    }, 2000)
   }
 
   useEffect(() => {
@@ -340,7 +364,7 @@ const Investments = ({ user }: IProps) => {
       dataIndex: 'key',
       key: 'key',
       render: (key: any, data: any, idx: number) => {
-        return <>{idx + 1}</>
+        return <>{paginate.from + idx}</>
       },
     },
     {
@@ -467,6 +491,19 @@ const Investments = ({ user }: IProps) => {
     })
   }
 
+  const onChangeTable = (pagination: any, filters: any, sorter: any) => {
+    console.log(pagination)
+
+    setPaginate({
+      ...paginate,
+      current_page: pagination.current,
+      page: pagination.current,
+      per_page: pagination.pageSize,
+    })
+
+    init(pagination)
+  }
+
   return (
     <>
       <Breadcrumb style={{ margin: '16px 0' }}>
@@ -495,8 +532,14 @@ const Investments = ({ user }: IProps) => {
               columns={columns}
               loading={loading}
               scroll={{ x: 1300 }}
+              onChange={onChangeTable}
               pagination={{
                 position: ['bottomCenter'],
+                current: paginate.current_page,
+                defaultPageSize: 10,
+                pageSizeOptions: [10, 20, 50, 100, 200],
+                pageSize: paginate.per_page,
+                total: paginate.total,
               }}
             />
           </Col>
