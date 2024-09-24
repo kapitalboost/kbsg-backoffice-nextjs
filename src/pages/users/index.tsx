@@ -172,7 +172,9 @@ const Users = ({ user }: IProps) => {
         ) : (
           <Input
             ref={searchInput}
-            placeholder={`Search ${dataIndex}`}
+            placeholder={`Search ${
+              dataIndex === 'full_name' ? 'Name' : dataIndex
+            }`}
             value={selectedKeys[0]}
             onChange={(e) =>
               setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -180,7 +182,11 @@ const Users = ({ user }: IProps) => {
             onPressEnter={() =>
               handleSearch(selectedKeys as string[], confirm, dataIndex)
             }
-            style={{ marginBottom: 8, display: 'block' }}
+            style={{
+              marginBottom: 8,
+              display: 'block',
+              textTransform: 'capitalize',
+            }}
           />
         )}
         <Space>
