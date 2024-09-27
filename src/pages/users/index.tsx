@@ -185,7 +185,7 @@ const Users = ({ user }: IProps) => {
             style={{
               marginBottom: 8,
               display: 'block',
-              textTransform: 'capitalize',
+              textTransform: 'lowercase',
             }}
           />
         )}
@@ -240,16 +240,12 @@ const Users = ({ user }: IProps) => {
         )}
       </>
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100)
-      }
-    },
+    // onFilter: (value, record) => {record[datain]},
+    // onFilterDropdownOpenChange: (visible) => {
+    //   if (visible) {
+    //     setTimeout(() => searchInput.current?.select(), 100)
+    //   }
+    // },
     render: (text) => text,
   })
 
